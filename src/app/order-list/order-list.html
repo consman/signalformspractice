@@ -1,0 +1,26 @@
+@let ords = orders$ | async;
+
+@if(ords && ords.length > 0){
+  <h3>ORDERS:</h3>
+  <table><tr><th>Customer</th><th>Date Created</th><th>Status</th><th> OrderTotal</th></tr>
+  @for( ord of ords; track ord){
+    <tr><td> 
+          <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
+        </td><td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td><td>{{ord.orderStatus}}</td>
+      <td class="orderTotal">
+
+        {{getOrderTotal(ord) | currency}}
+        <!-- TODO Fix this!  I could not get anything like this to work:
+        @let total = 0;
+        @for(item of ord.items; track item){
+
+          total = {{total + (item.price * item.qty)}}
+          
+        }
+        {{total | currency}}
+         -->
+      </td></tr>
+  }
+  </table>
+}
+

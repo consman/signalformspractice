@@ -1,0 +1,76 @@
+@let ord = ord$ | async;
+@if ( ord ) {
+    
+    <form (submit)="onSubmit($event)">
+        
+        <div>
+            <label>
+                Customer
+                <input type="text" [field]="orderForm.customerName" 
+                 />
+            </label>
+            @if(orderForm.customerName() && orderForm.customerName().touched()){
+                <div class="error">
+                    @for(error of orderForm.customerName().errors(); track error.kind){
+                        <span>{{error.message}}</span>
+                    }
+                </div>
+            }
+        </div>
+
+        <div>
+            <label>
+                Date Ordered
+                <!-- The Order create date should never be changed, only displayed. -->
+                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled/>
+            </label>
+        </div>
+
+        <div>
+            <label>
+                CSR Approval Date
+                <input type="date" [field]="orderForm.csrApprovalDate" />
+            </label>
+
+            @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - now.getTime() > 0) && orderModel().orderStatus=='Approved') ;
+            
+            @if(  approvedWithFutureDate  && (orderForm.orderStatus().touched() || orderForm.csrApprovalDate().touched()  )){
+                <div class="error">
+                    <span>The CSR Approval Date must not be in the future if the order is approved.</span>
+                </div>                
+            }
+            <!-- <span>{{orderModel().csrApprovalDate.getTime()}} - {{now.getTime()}}  =  {{orderModel().csrApprovalDate.getTime() - now.getTime() }}</span><br/>
+                <span>approvedWithFutureDate: {{approvedWithFutureDate}}</span><br/>
+                <span>orderModel().orderStatus = {{orderModel().orderStatus}}</span><br/>
+                -->
+        </div>
+
+        <div>
+            <label>
+                Status
+                <select [field]="orderForm.orderStatus" >
+                    <option>New</option>
+                    <option>In Progress</option>
+                    <option>Approved</option>
+                    <option>FulFilled</option>
+                    <option>Shipped</option>
+                </select>
+            </label>
+        </div>
+<!--
+        <div>
+            <label>
+                Total:
+                <input type="" [field]="" />
+            </label>
+        </div>
+    -->
+        
+        @if(!done()){    
+          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate ">  Update</button>
+        }
+        <p class="resultClass">{{result()}}</p>
+    </form>
+}
+
+<button [routerLink]="['/orders']">Back To List</button>
