@@ -1,13 +1,19 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Signal } from '@angular/core';
 import { filter, from, Observable, of } from 'rxjs';
 import { Orderi } from './defs';
 import { ORDERS } from './mockData';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Injectable({
   providedIn: 'root',
 })
 export class OrderService {
   
+  getAllOrdersSignal(): Signal<Orderi[]| undefined>{
+    //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')
+    return toSignal(of (ORDERS));
+  }
+
   getAllOrders(): Observable<Orderi[]>{
     //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')
     return of (ORDERS);
