@@ -5,10 +5,11 @@ export interface Orderi {
     customerName : string;
     csrApprovalDate : Date;
     orderStatus : string ;
-    items: Item[] | undefined;
+    items: Item[];
 }
 
 export interface Item {
+    itemId: number;
     description : string;
     price : number;
     qty : number;

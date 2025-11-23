@@ -27,7 +27,8 @@ export class OrderService {
         result = true;
         ord.csrApprovalDate = order.csrApprovalDate;
         ord.customerName = order.customerName;
-        ord.items = ord.items;
+        ord.items = order.items;
+
         ord.orderStatus = order.orderStatus;
         console.log('Order for '+ order.customerName + ' has been updated.')
       }

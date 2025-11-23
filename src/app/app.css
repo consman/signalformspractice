@@ -1,5 +1,5 @@
 form {
-  max-width: 400px;
+  max-width: 80%;
   margin: 2rem auto;
   padding: 2rem;
   border: 1px solid #ddd;
@@ -70,7 +70,7 @@ button:disabled {
 }
 
 .form-debug {
-  max-width: 400px;
+  max-width: 80%;
   margin: 2rem auto;
   padding: 1rem;
   border: 1px solid #e0e0e0;

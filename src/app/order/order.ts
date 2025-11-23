@@ -24,6 +24,7 @@ export class Order {
   now = new Date();
   result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
+  itemz: Item[]=[{itemId:0,description:'',qty:0, price:0}];
 
   orderModel = signal<Orderi>({ 
     orderId : 0,
@@ -31,31 +32,24 @@ export class Order {
     customerName: '',
     csrApprovalDate: this.beginningOfTime,
     orderStatus: '',
-    items: undefined
+    items: this.itemz
   });
 
   orderForm = form(this.orderModel, (fieldPath) => {
-    required(fieldPath.customerName,{message:' Customer Name is required.'});    
+    required(fieldPath.customerName,{message:' Customer Name is required.'}); 
+    required(fieldPath.items, {message:' At least one item is required.'})   
   });
-
-//  approvalDatevsApprovalError: WritableSignal<boolean> = signal(this.orderModel().csrApprovalDate.getTime() > this.now.getTime());
-//  tempApprovalStatus: WritableSignal<string> = signal(this.orderModel().orderStatus);
-
 
   constructor(route: ActivatedRoute,
     _router: Router){
-      //if(this.now.getTime()){}
+      
     let param = route.snapshot.paramMap.get('orderId');
     if(param){
       let myInt = parseInt(param);
       if(myInt){
         this.orderId.set(myInt);
         this.ord$ = this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
-          this.orderModel.set(o); 
-          if(o.csrApprovalDate.getTime()> this.now.getTime()){
-            //this.approvalDatevsApprovalError.set(true);
-          }
-          
+          this.orderModel.set(o);           
         }));        
       }
       else{

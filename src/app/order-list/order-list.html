@@ -8,17 +8,15 @@
           <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
         </td><td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td><td>{{ord.orderStatus}}</td>
       <td class="orderTotal">
-
         {{getOrderTotal(ord) | currency}}
-        <!-- TODO Fix this!  I could not get anything like this to work:
+<!-- 
+        TODO Fix this!  I could not get anything like this to work:       
         @let total = 0;
         @for(item of ord.items; track item){
-
-          total = {{total + (item.price * item.qty)}}
-          
-        }
+          total = total+ {{(item.price * item.qty)}};
+        }        
         {{total | currency}}
-         -->
+          -->
       </td></tr>
   }
   </table>
