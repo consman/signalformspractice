@@ -6,10 +6,11 @@ import { Observable , pipe, tap} from 'rxjs';
 
 import { Field, form, submit , required} from '@angular/forms/signals';
 import { AsyncPipe , DatePipe} from '@angular/common';
+import { ItemList } from '../item-list/item-list';
 
 @Component({
   selector: 'app-order',
-  imports: [RouterLink, Field, AsyncPipe, DatePipe],
+  imports: [RouterLink, Field, AsyncPipe, DatePipe, ItemList],
   templateUrl: './order.html',
   styleUrl: '../app.css',
 })
@@ -37,7 +38,7 @@ export class Order {
 
   orderForm = form(this.orderModel, (fieldPath) => {
     required(fieldPath.customerName,{message:' Customer Name is required.'}); 
-    required(fieldPath.items, {message:' At least one item is required.'})   
+    //required(fieldPath.items, {message:' At least one item is required.'})   
   });
 
   constructor(route: ActivatedRoute,
@@ -72,6 +73,7 @@ export class Order {
         this.result.set('Success!');
         this.done.set(true);
         console.log(' done = '+ this.done());
+        console.log(' event.target = '+ event.target);
       }
 
     });
