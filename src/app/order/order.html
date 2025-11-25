@@ -58,9 +58,14 @@
             </label>
         </div>
 
-        <div>ord.items.length= {{ord.items.length}}</div>
-        <app-item-list [items]="orderForm.items"></app-item-list>
-        <!--
+         
+    
+        <app-item-list [items]="orderForm.items" [ot]="orderTotal"></app-item-list>
+
+     <!-- 
+         <div><table><tr><td></td><td>Total:</td><td>{{orderTotal()}}</td></tr></table></div>
+    
+        <div>ord.items.length= {{ord.items.length}}</div>    
         <app-item-list [itemx]="ord.items"></app-item-list>
         <app-item-list [itemx]="orderModel().items"></app-item-list>
         <app-item-list [itemx]="orderForm.items"></app-item-list>

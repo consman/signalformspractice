@@ -38,8 +38,9 @@ export class Order {
 
   orderForm = form(this.orderModel, (fieldPath) => {
     required(fieldPath.customerName,{message:' Customer Name is required.'}); 
-    //required(fieldPath.items, {message:' At least one item is required.'})   
   });
+
+  orderTotal: WritableSignal<number> = signal(0);
 
   constructor(route: ActivatedRoute,
     _router: Router){
@@ -50,7 +51,11 @@ export class Order {
       if(myInt){
         this.orderId.set(myInt);
         this.ord$ = this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
-          this.orderModel.set(o);           
+          this.orderModel.set(o);   
+          o.items.forEach(i=>{
+            let temp = this.orderTotal() ;
+            this.orderTotal.set(temp + (i.price * i.qty));
+          });        
         }));        
       }
       else{
@@ -59,8 +64,7 @@ export class Order {
     }
     else{
       console.warn('Param is missing.');
-    }
-    
+    } 
   }
 
   onSubmit(event: Event): void{
@@ -78,5 +82,4 @@ export class Order {
 
     });
   }
-
 }

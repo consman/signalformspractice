@@ -8,31 +8,12 @@
           <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
         </td><td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td><td>{{ord.orderStatus}}</td>
       <td class="orderTotal">
-        {{getOrderTotal(ord) | currency}}
-<!-- 
-        TODO Fix this!  I could not get anything like this to work:       
-        @let total = 0;
-        @for(item of ord.items; track item){
-          total = total+ {{(item.price * item.qty)}};
-        }        
-        {{total | currency}}
-          -->
+        @if(ord.orderId != undefined ){
+          {{orderTotalsMapSig().get(ord.orderId) | currency }} 
+        }
       </td></tr>
   }
   </table>
-
-<!--This builds, but renders:
-        The orders Signal is: [object Object],[object Object],[object Object],[object Object],[object Object] 
-         -->
-  @if(ordersSignal() != undefined ){
-      <br><br><div>The orders Signal is: {{ordersSignal()}}</div>    
-  }
-
-<!-- This does not build because the first mention of `ordersSignal().length != undefined` fails for being undefined
-     even though that is what I am testing for:     
-  @if(ordersSignal() != undefined && ordersSignal().length != undefined  ){
-      <br><br><div>The length of the orders Signal is: {{ordersSignal().length}}</div>    
-  }
--->
+  
 }
 

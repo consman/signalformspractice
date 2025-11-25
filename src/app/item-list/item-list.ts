@@ -1,27 +1,22 @@
-import { Component, input, signal, WritableSignal } from '@angular/core';
-import { Field, FieldTree, form, required } from '@angular/forms/signals';
-import { Observable, of } from 'rxjs';
-import { AsyncPipe,DecimalPipe } from '@angular/common';
+import { Component, input, Signal, WritableSignal } from '@angular/core';
+import { Field, FieldTree } from '@angular/forms/signals';
 
-import { Item, Orderi } from '../defs';
+import { CurrencyPipe } from '@angular/common';
+
+import { Item } from '../defs';
 
 @Component({
   selector: 'app-item-list',
-  imports: [AsyncPipe,Field,DecimalPipe],//[,Observable],//[Field],
+  imports: [Field,CurrencyPipe],
   templateUrl: './item-list.html',
   styleUrl: './item-list.css',
 })
 export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
+  ot = input.required<WritableSignal<number>>();
  
-  constructor(){
-        //console.log('this.items().length to start = '+ this.items().length);
+  constructor(){        
   }
-
-showItemLength():void{
-  console.log('Func says this.items().length = '+ this.items().length);
-}
-  
   
 }

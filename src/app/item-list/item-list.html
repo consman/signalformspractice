@@ -1,6 +1,4 @@
 
-
-<div>items().length = {{items().length}}</div>
 @let itemForms = items();
 
 <div>
@@ -10,58 +8,10 @@
         @for(item of itemForms; track $index){
             <tr>
                 <td><input [field]="item.description" /></td>
+                <td><input [field]="item.qty" type="number"  /></td>
                 <td><input [field]="item.price" type="number" /></td>
-                <td><input [field]="item.qty" type="number" /></td>
             </tr>
-        }
+        }        
+        <tr><td></td><th>Total:</th><th>{{ot()()| currency}}</th></tr>
     </table>
 </div>
-    <!--
-<button (click)="showItemLength()">Item Length to Console</button>
-    <div>{{itemx}}</div> 
-    <div>{{itemx()}}</div> 
-    <div>{{itemx().length}}</div> 
-    <div>{{itemx()[0].description}}</div> 
-    <div>itemListForm.il = {{itemListForm.il}}</div>
-    <div>itemListForm.il[0] = {{itemListForm.il[0]}}</div>
-
-
-    @if(itemListForm().il() && itemListForm().il().length > 0){   
-    
-    <div>{{itemListModel}}</div>
-    <div>{{itemListModel()}}</div>
-    <div>{{itemListModel().il}}</div>
-    <div>itemListModel().il[0].description = {{itemListModel().il[0].description}}</div>
-    <div>{{itemListModel().il.length}}</div>
-    <div>itemListForm.il()[0].description = {{itemListForm.il[0].description().value}}</div>
-    <div>itemx().length :  {{itemx().length}}</div> 
-@if(itemListModel != undefined && itemListModel().il != undefined && itemListModel().il.length != undefined) {
-  <div>itemListModel().il.length = {{itemListModel().il.length}}</div>
-}  
-
-
-        <div>
-            Items:
-            <table>
-                <tr><th>Description</th><th>Quantity</th><th>Price</th></tr>
-            @for(item of itemListForm.il; track item.itemId; let idx = $index){
-                <tr>                
-                    <td><input type="text" [field]="itemListForm.il[idx].description" /> 
-                       @if(itemListForm.il[idx].description.length < 3 && itemListForm.il[idx].description().touched()){
-                         <div class="error">
-                            <span>The descripion must be at least 3 characters.</span>
-                        </div> 
-                       } 
-                    
-                    </td>               
-                                
-                    <td> <input type="number" [field]="itemListForm.il[idx].qty" /> </td>
-                                
-                    <td><input type="number" [field]="itemListForm.il[idx].price" /> </td>
-                </tr>
-            }
-            </table>
-        </div>
-    
-
-    -->
