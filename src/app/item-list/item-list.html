@@ -7,11 +7,28 @@
         <tr><th>Description</th><th>Quantity</th><th>Price</th></tr>
         @for(item of itemForms; track $index){
             <tr>
-                <td><input [field]="item.description" /></td>
+                <td><input [field]="item.description" /></td>                
                 <td><input [field]="item.qty" type="number"  /></td>
                 <td><input [field]="item.price" type="number" /></td>
             </tr>
+            @if(item().value().description.length < 3){
+                <div class="error">
+                    <span>The description must be 3 characters long.</span>
+                </div>
+            }
+            @if(item().value().qty < 1 || !item().value().qty){
+                <div class="error">
+                    <span>The quantity must be at least 1.</span>
+                </div>
+            }
+            @if(item().value().price < 1 || !item().value().price){
+                <div class="error">
+                    <span>The price must be at least 1.00.</span>
+                </div>
+            }
         }        
-        <tr><td></td><th>Total:</th><th>{{ot()()| currency}}</th></tr>
+        <tr><td></td><th>Total:</th><th>{{resultTot()| currency}}</th></tr>
     </table>
+       
+    
 </div>

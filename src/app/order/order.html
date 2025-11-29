@@ -60,50 +60,13 @@
 
          
     
-        <app-item-list [items]="orderForm.items" [ot]="orderTotal"></app-item-list>
+        <app-item-list [items]="orderForm.items"></app-item-list>
 
-     <!-- 
-         <div><table><tr><td></td><td>Total:</td><td>{{orderTotal()}}</td></tr></table></div>
-    
-        <div>ord.items.length= {{ord.items.length}}</div>    
-        <app-item-list [itemx]="ord.items"></app-item-list>
-        <app-item-list [itemx]="orderModel().items"></app-item-list>
-        <app-item-list [itemx]="orderForm.items"></app-item-list>
-
-        <div>
-            Items:
-            <table>
-                <tr><th>Description</th><th>Quantity</th><th>Price</th></tr>
-            @for(item of ord.items; track item.itemId; let idx = $index){
-                <tr>                
-                    <td><input type="text" [field]="orderForm.items[idx].description" /> 
-                       @if(orderModel().items[idx].description.length < 3 && orderForm.items[idx].description().touched()){
-                         <div class="error">
-                            <span>The descripion must be at least 3 characters.</span>
-                        </div> 
-                       } 
-                    
-                    </td>               
-                                
-                    <td> <input type="number" [field]="orderForm.items[idx].qty" /> </td>
-                                
-                    <td><input type="number" [field]="orderForm.items[idx].price" /> </td>
-                </tr>
-            }
-            </table>
-        </div>
-        -->
-<!--
-        <div>
-            <label>
-                Total:
-                <input type="" [field]="" />
-            </label>
-        </div>
-    -->
         
         @if(!done()){    
-          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate ">  Update</button>
+          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate ">
+            Update
+        </button>
         }
         <p class="resultClass">{{result()}}</p>
     </form>

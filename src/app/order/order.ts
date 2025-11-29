@@ -76,8 +76,8 @@ export class Order {
       if (updateResult){
         this.result.set('Success!');
         this.done.set(true);
-        console.log(' done = '+ this.done());
-        console.log(' event.target = '+ event.target);
+        //console.log(' done = '+ this.done());
+        //console.log(' event.target = '+ event.target);
       }
 
     });

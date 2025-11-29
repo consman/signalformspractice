@@ -1,22 +1,30 @@
-import { Component, input, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, input, signal, Signal, WritableSignal } from '@angular/core';
 import { Field, FieldTree } from '@angular/forms/signals';
-
 import { CurrencyPipe } from '@angular/common';
-
 import { Item } from '../defs';
 
 @Component({
   selector: 'app-item-list',
   imports: [Field,CurrencyPipe],
   templateUrl: './item-list.html',
-  styleUrl: './item-list.css',
+  styleUrl: '../app.css',
 })
 export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
-  ot = input.required<WritableSignal<number>>();
- 
+  resultTot = computed<number> ( () => this.getTotal(this.items().length));
+
   constructor(){        
+
   }
-  
+
+  getTotal(xxx:number): number{
+   const itemForms = this.items();
+   let result = 0;
+   itemForms().value().forEach(i => {
+    result = result + (i.price * i.qty);
+   });
+   return result;
+}
+
 }
