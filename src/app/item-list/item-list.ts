@@ -21,10 +21,16 @@ export class ItemList {
   getTotal(xxx:number): number{
    const itemForms = this.items();
    let result = 0;
-   itemForms().value().forEach(i => {
-    result = result + (i.price * i.qty);
-   });
+   if (this.items() && this.items().length > 0 && itemForms && itemForms()) {
+    itemForms().value().forEach(i => {
+      result = result + (i.price * i.qty);
+    });
+    console.log('The total is ' + result);
+   }
+   else{
+    console.log('must be unit testing - itemForms is not a function.');
+   }
    return result;
-}
+  }
 
 }

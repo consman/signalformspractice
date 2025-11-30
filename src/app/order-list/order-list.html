@@ -6,8 +6,10 @@
   @for( ord of ords; track ord){
     <tr><td> 
           <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
-        </td><td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td><td>{{ord.orderStatus}}</td>
-      <td class="orderTotal">
+        </td>
+        <td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td>
+        <td>{{ord.orderStatus}}</td>
+        <td class="orderTotal">
         @if(ord.orderId != undefined ){
           {{orderTotalsMapSig().get(ord.orderId) | currency }} 
         }
