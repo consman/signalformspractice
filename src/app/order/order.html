@@ -3,10 +3,10 @@
     
     <form (submit)="onSubmit($event)">
         
-        <div>
+        <div class="form-group">
             <label>
                 Customer
-                <input type="text" [field]="orderForm.customerName" 
+                <input type="text" [field]="orderForm.customerName" class="form-control"
                  />
             </label>
             @if(orderForm.customerName() && orderForm.customerName().touched()){
@@ -18,18 +18,18 @@
             }
         </div>
 
-        <div>
+        <div class="form-group">
             <label>
                 Date Ordered
                 <!-- The Order create date should never be changed, only displayed. -->
-                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled/>
+                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled class="form-control"/>
             </label>
         </div>
 
-        <div>
+        <div class="form-group">
             <label>
                 CSR Approval Date
-                <input type="date" [field]="orderForm.csrApprovalDate" />
+                <input type="date" [field]="orderForm.csrApprovalDate" class="form-control"/>
             </label>
 
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - now.getTime() > 0) && orderModel().orderStatus=='Approved') ;
@@ -45,7 +45,7 @@
                 -->
         </div>
 
-        <div>
+        <div class="form-group">
             <label>
                 Status
                 <select [field]="orderForm.orderStatus" >
@@ -64,7 +64,7 @@
 
         
         @if(!done()){    
-          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate ">
+          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
             Update
         </button>
         }
@@ -72,4 +72,4 @@
     </form>
 }
 
-<button [routerLink]="['/orders']">Back To List</button>
+<button [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>

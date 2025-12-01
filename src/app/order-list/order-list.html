@@ -1,21 +1,29 @@
-@let ords = orders$ | async;
 
-@if(ords && ords.length > 0){
-  <h3>ORDERS:</h3>
-  <table><tr><th>Customer</th><th>Date Created</th><th>Status</th><th> OrderTotal</th></tr>
-  @for( ord of ords; track ord){
-    <tr><td> 
-          <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
-        </td>
-        <td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td>
-        <td>{{ord.orderStatus}}</td>
-        <td class="orderTotal">
-        @if(ord.orderId != undefined ){
-          {{orderTotalsMapSig().get(ord.orderId) | currency }} 
-        }
-      </td></tr>
-  }
-  </table>
   
-}
 
+  <div class="orda">
+
+  <h3>ORDERS:</h3>
+    @let ords = orders$ | async;
+
+    @if(ords && ords.length > 0){
+      
+      <table><tr><th>Customer</th><th>Date Created</th><th>Status</th><th> OrderTotal</th></tr>
+      @for( ord of ords; track ord){
+        <tr class="col-xs-12 col-sm-6 col-md-4 col-lg-3"><td> 
+              <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
+            </td>
+            <td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td>
+            <td>{{ord.orderStatus}}</td>
+            <td class="orderTotal">
+            @if(ord.orderId != undefined ){
+              {{orderTotalsMapSig().get(ord.orderId) | currency }} 
+            }
+          </td></tr>
+      }
+      </table>
+      
+    }
+  </div>
+
+  

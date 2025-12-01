@@ -1,1 +1,81 @@
-/* You can add global styles to this file, and also import other style files */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #fff;
+  background-color: #007bff;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.ml3 {
+  margin-left: 3px;
+}
+
+.ml3 {
+  margin-left: 3px;
+}
+
+.form-control {
+  width: 98%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.w-200 {
+  width: 200px;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  /* margin-bottom: 0.5rem; */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  background-color: #f4f5f7;
+}
+
+.main-panel {
+  margin-left: 250px;
+  margin-top: 60px;
+  padding: 2rem;
+  flex: 1;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: -15px;
+}
+.col-xs-12,
+.col-sm-6,
+.col-md-4,
+.col-lg-3 {
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.card {
+  background-color: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 0rem;
+}
