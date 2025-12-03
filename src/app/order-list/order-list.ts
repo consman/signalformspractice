@@ -17,22 +17,14 @@ export class OrderList {
   orders$: Observable<Orderi[]>; 
   orderTotalsMap: Map <number,number> = new Map();
   orderTotalsMapSig: WritableSignal<Map<number,number>> = signal(this.orderTotalsMap); 
-  newOrderButtonClick = signal(false);
-  newOrder$: Observable<Orderi>;
   
   constructor(){
-
-      this.newOrder$ = this.orderService.addNewOrder().pipe(tap(o=> {
-        let newOrder = o;
-        this.addTotals(newOrder);
-      }));    
 
     this.orders$ = this.orderService.getAllOrders().pipe(tap(ords =>{
       ords.forEach(o=>{
         this.addTotals(o);        
       });
-    }));
-    
+    }));    
   }
 
   addTotals(order:Orderi) :void{
@@ -45,8 +37,4 @@ export class OrderList {
     }
   }
 
-    addNewOrder():void{
-      this.newOrderButtonClick.set(true); 
-
-    }
 }

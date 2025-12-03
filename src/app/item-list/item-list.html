@@ -11,17 +11,17 @@
                 <td><input [field]="item.qty" type="number"  class="form-control" /></td>
                 <td><input [field]="item.price" type="number" class="form-control" /></td>
             </tr>
-            @if(item().value().description.length < 3){
+            @if(item.description().touched() && item().value().description.length < 3){
                 <div class="error">
                     <span>The description must be 3 characters long.</span>
                 </div>
             }
-            @if(item().value().qty < 1 || !item().value().qty){
+            @if(item.qty().touched() && (item().value().qty < 1 || !item().value().qty)){
                 <div class="error">
                     <span>The quantity must be at least 1.</span>
                 </div>
             }
-            @if(item().value().price < 1 || !item().value().price){
+            @if(item.price().touched() && (item().value().price < 1 || !item().value().price)){
                 <div class="error">
                     <span>The price must be at least 1.00.</span>
                 </div>

@@ -25,7 +25,7 @@ export class ItemList {
     itemForms().value().forEach(i => {
       result = result + (i.price * i.qty);
     });
-    console.log('The total is ' + result);
+    //console.log('The total is ' + result);
    }
    else{
     console.log('must be unit testing - itemForms is not a function.');

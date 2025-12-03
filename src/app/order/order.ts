@@ -18,11 +18,12 @@ import { ItemList } from '../item-list/item-list';
 export class Order { 
 
   orderService = inject(OrderService); 
-  
-  ord$: Observable<Orderi> | undefined;
-  orderId: WritableSignal<number> = signal(0);
-  beginningOfTime = new Date(0);
   now = new Date();
+  beginningOfTime = new Date(0);
+  
+  ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
+  orderId: WritableSignal<number> = signal(0);
+  
   result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
   itemz: Item[]=[{itemId:0,description:'',qty:0, price:0}];
@@ -42,29 +43,53 @@ export class Order {
 
   orderTotal: WritableSignal<number> = signal(0);
 
-  constructor(route: ActivatedRoute,
-    _router: Router){
+  constructor(route: ActivatedRoute, _router: Router){
+
+    //console.log('in constructor');
+
+    this.orderId.set(0);
+    let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
+    let tempNewOrderId: number | undefined  = 0;
+    if(orderIdOrFunc == 'add'){
+      //this.add.set(true);
+      //console.log(' Func = add');
       
-    let param = route.snapshot.paramMap.get('orderId');
-    if(param){
-      let myInt = parseInt(param);
-      if(myInt){
-        this.orderId.set(myInt);
-        this.ord$ = this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
-          this.orderModel.set(o);   
-          o.items.forEach(i=>{
+      this.ordSig$.set( this.orderService.addNewOrder().pipe(tap(o=> {
+        
+        tempNewOrderId = o.orderId;
+        if(o.orderId) {
+          this.orderId.set(o.orderId);
+          //console.log(' in Func = add and the orderId = '+ o.orderId);
+        }
+        this.orderModel.set(o); 
+        o.items.forEach(i=>{
             let temp = this.orderTotal() ;
             this.orderTotal.set(temp + (i.price * i.qty));
-          });        
-        }));        
+          });  
+        })));  
+    }
+    else{ // not add but coming in with an existing order
+      //console.log('In existing order section and param = ' + orderIdOrFunc);
+      if(orderIdOrFunc){      
+        let myInt = parseInt(orderIdOrFunc);
+        if(myInt){
+          this.orderId.set(myInt);
+          this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
+            this.orderModel.set(o);   
+            o.items.forEach(i=>{
+              let temp = this.orderTotal() ;
+              this.orderTotal.set(temp + (i.price * i.qty));
+            });        
+          })));      
+        }
+        else{
+          console.warn('Cannot parse an Int from the param of ' + orderIdOrFunc);
+        }
       }
       else{
-        console.warn('Cannot parse an Int from the param of ' + param);
-      }
+        console.warn('Param is not orderId, but rather '+ orderIdOrFunc);
+      } 
     }
-    else{
-      console.warn('Param is missing.');
-    } 
   }
 
   onSubmit(event: Event): void{
@@ -76,6 +101,7 @@ export class Order {
       if (updateResult){
         this.result.set('Success!');
         this.done.set(true);
+        
         //console.log(' done = '+ this.done());
         //console.log(' event.target = '+ event.target);
       }

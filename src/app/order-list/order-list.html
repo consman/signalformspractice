@@ -22,11 +22,9 @@
           </td></tr>
       }
       </table>
-  <button (click)="addNewOrder()">Add New Order</button>    
     }
-    @if(newOrderButtonClick()){
-      <span>going for new order button click ...</span>
-    }
+    <button [routerLink]="['/order','add']">Add New Order</button>    
+    
   </div>
 
   

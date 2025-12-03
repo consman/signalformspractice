@@ -3,7 +3,7 @@ import { routes } from '../app.routes';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 
 export const FAKE_ROUTE = {
-  snapshot: { paramMap: {get: () => 'order/:600'}}
+  snapshot: { paramMap: {get: () => 'order'}}
 };
 
 import { Order } from './order';

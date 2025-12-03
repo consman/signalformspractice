@@ -9,12 +9,13 @@ import { ORDERS } from './mockData';
 export class OrderService {
 
   ordersSig$: WritableSignal<Observable<Orderi[]>> = signal( of(ORDERS));
-  orders: Orderi[];
+  orders: WritableSignal<Orderi[]>= signal(ORDERS);
   nextOrderId=0;
+  newOrderSig: WritableSignal<Orderi>= signal(this.getNewOrder());
 
   constructor(){
-    this.orders = ORDERS;
-    this.orders.forEach(o => {
+    this.orders.set(ORDERS);
+    this.orders().forEach(o => {
       if(o.orderId && o.orderId >= this.nextOrderId){
           this.nextOrderId = o.orderId + 1;
         }
@@ -23,7 +24,7 @@ export class OrderService {
 
   getAllOrders(): Observable<Orderi[]>{
     //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')    
-    let result =  of (this.orders);
+    let result =  of (this.orders());
     this.ordersSig$.set(result);
     return result;
   }
@@ -37,7 +38,7 @@ export class OrderService {
   updateOrder(order:Orderi):Observable<boolean>{
 
     let result = false;
-    ORDERS.forEach(ord => {
+    this.orders().forEach(ord => {
       if (ord.orderId == order.orderId){
         result = true;
         ord.csrApprovalDate = order.csrApprovalDate;
@@ -45,23 +46,32 @@ export class OrderService {
         ord.items = order.items;
 
         ord.orderStatus = order.orderStatus;
-        console.log('Order for '+ order.customerName + ' has been updated.')
+        //console.log('Order for '+ order.customerName + ' has been updated.')
       }
     });
+    let obsOrds =  of (this.orders());
+    this.ordersSig$.set(obsOrds);
     return of(result);
   }
 
   addNewOrder():Observable<Orderi>{
-    let newOrder = NEWORDER;
-    newOrder.orderId = this.nextOrderId++;
-    console.log('newOrder.orderId = ' + newOrder.orderId  + ' and this.nextOrderId = ' + this.nextOrderId);
-    return of(newOrder);
+    //let newOrder = NEWORDER;
+    this.newOrderSig.set(this.getNewOrder());
+    this.newOrderSig().orderId = this.nextOrderId++;
+    //console.log('this.getNewOrder().customerName: ' + this.getNewOrder().customerName);
+    //console.log('this.newOrderSig().customerName = '+ this.newOrderSig().customerName+'  this.newOrderSig().orderId = ' + this.newOrderSig().orderId  + ' and this.nextOrderId = ' + this.nextOrderId);
+    this.orders().push(this.newOrderSig());
+    let obsOrds =  of (this.orders());
+    this.ordersSig$.set(obsOrds);
+    //console.log('Returning order with a customer name of: ' +this.newOrderSig().customerName)
+    return of(this.newOrderSig());
   }
-  
-}
 
-export const NEWORDER: Orderi =
-{orderId:0,createDate:new Date (),customerName:'Customer Name',csrApprovalDate:new Date (0),orderStatus:'New',items:
-    [{itemId:1,description:'Description', price:0,qty:0}
+  getNewOrder(): Orderi{
+    return {orderId:0,createDate:new Date (),customerName:'Customer Name Here',csrApprovalDate:new Date (0),orderStatus:'New',items:
+    [{itemId:1,description:'Item Description Here', price:0,qty:0}
     ]
 };
+  }
+}
+
