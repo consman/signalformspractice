@@ -1,4 +1,4 @@
-import { Orderi } from "./defs";
+import { Orderi } from "./order/Orderi";
 
 export const da = 24*60*60*1000;
 export const AWEEKAGO = new Date(new Date().getTime()-(7*da));

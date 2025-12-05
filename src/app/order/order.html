@@ -6,10 +6,10 @@
         <div class="form-group">
             <label>
                 Customer
-                <input type="text" [field]="orderForm.customerName" class="form-control"
+                <input type="text" [field]="orderForm.customerName" class="form-control" placeholder="Enter customer Name here"
                  />
             </label>
-            @if(orderForm.customerName() && orderForm.customerName().touched()){
+            @if(orderForm.customerName().invalid() && orderForm.customerName().touched()){
                 <div class="error">
                     @for(error of orderForm.customerName().errors(); track error.kind){
                         <span>{{error.message}}</span>
@@ -22,14 +22,14 @@
             <label>
                 Date Ordered
                 <!-- The Order create date should never be changed, only displayed. -->
-                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled class="form-control"/>
+                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled class="form-control" />
             </label>
         </div>
 
         <div class="form-group">
             <label>
                 CSR Approval Date
-                <input type="date" [field]="orderForm.csrApprovalDate" class="form-control"/>
+                <input type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
 
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - now.getTime() > 0) && orderModel().orderStatus=='Approved') ;
@@ -66,3 +66,7 @@
 }
 
 <button [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>
+
+<!-- Use for debug:
+<div>this.orderForm().value() = {{this.orderForm().value() | json }}</div>
+-->

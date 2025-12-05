@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FieldTree } from '@angular/forms/signals';
 import { ItemList } from './item-list';
 import { inputBinding, signal } from '@angular/core';
-import { Item } from '../defs';
-
+import { Item } from './itemList';
 
 describe('ItemList', () => {
   let component: ItemList;

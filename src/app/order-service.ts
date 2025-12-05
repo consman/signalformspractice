@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { from, Observable, of } from 'rxjs';
-import { Orderi } from './defs';
+import { getNewOrder, Orderi } from './order/Orderi';
 import { ORDERS } from './mockData';
 
 @Injectable({
@@ -11,7 +11,7 @@ export class OrderService {
   ordersSig$: WritableSignal<Observable<Orderi[]>> = signal( of(ORDERS));
   orders: WritableSignal<Orderi[]>= signal(ORDERS);
   nextOrderId=0;
-  newOrderSig: WritableSignal<Orderi>= signal(this.getNewOrder());
+  newOrderSig: WritableSignal<Orderi>= signal(getNewOrder());
 
   constructor(){
     this.orders.set(ORDERS);
@@ -56,7 +56,7 @@ export class OrderService {
 
   addNewOrder():Observable<Orderi>{
     //let newOrder = NEWORDER;
-    this.newOrderSig.set(this.getNewOrder());
+    this.newOrderSig.set(getNewOrder());
     this.newOrderSig().orderId = this.nextOrderId++;
     //console.log('this.getNewOrder().customerName: ' + this.getNewOrder().customerName);
     //console.log('this.newOrderSig().customerName = '+ this.newOrderSig().customerName+'  this.newOrderSig().orderId = ' + this.newOrderSig().orderId  + ' and this.nextOrderId = ' + this.nextOrderId);
@@ -67,11 +67,5 @@ export class OrderService {
     return of(this.newOrderSig());
   }
 
-  getNewOrder(): Orderi{
-    return {orderId:0,createDate:new Date (),customerName:'Customer Name Here',csrApprovalDate:new Date (0),orderStatus:'New',items:
-    [{itemId:1,description:'Item Description Here', price:0,qty:0}
-    ]
-};
-  }
 }
 

@@ -1,7 +1,7 @@
 import { Component, signal, inject,  WritableSignal} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
-import { Orderi } from '../defs';
+import { Orderi } from '../order/Orderi';
 import { OrderService } from '../order-service';
 import { AsyncPipe, DatePipe, CurrencyPipe} from '@angular/common';
 

@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { routes } from '../app.routes';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { OrderList } from './order-list';
-import { Orderi } from '../defs';
+import { Orderi } from '../order/Orderi';
 
 export const FAKE_ROUTE = {
   snapshot: { paramMap: {get: () => 'orders'}}
