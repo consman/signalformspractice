@@ -12,14 +12,14 @@ import { Item, itemSchema, itemz } from './itemList';
 export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
-  resultTot = computed<number> ( () => this.getTotal(this.items().length));
+  resultTot = computed<number> ( () => this.getTotal());
   itemListModel = signal<Item[]>(itemz);
 
   constructor(){        
 
   }
 
-  getTotal(xxx:number): number{
+  getTotal(): number{
    const itemForms = this.items();
    let result = 0;
    if (this.items() && this.items().length > 0 && itemForms && itemForms()) {
