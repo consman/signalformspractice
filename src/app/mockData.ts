@@ -6,10 +6,10 @@ export const BEGINNINGOFTIME = new Date (0);
 
 export const ORDERS: Orderi[] =[
 {orderId:501,createDate:AWEEKAGO,customerName:'Michael Brennan',csrApprovalDate:AWEEKAGO,orderStatus:'In Progress',items:
-    [{itemId:1,description:'Laptop', price:17000,qty:1}
+    [{itemId:1,description:'Laptop', price:1700,qty:1}
     ,{itemId:2,description:'surge protector', price:178,qty:1}
-    ,{itemId:3,description:'Monitor', price:11000,qty:1}
-    ,{itemId:4,description:'Desktop', price:27000,qty:1}
+    ,{itemId:3,description:'Monitor', price:1100,qty:1}
+    ,{itemId:4,description:'Desktop', price:2700,qty:1}
     ]
 },
 {orderId:502,createDate:new Date(AWEEKAGO.getTime()+da),customerName:'Thomas Amsler',csrApprovalDate:BEGINNINGOFTIME,orderStatus:'New',items:
@@ -27,7 +27,7 @@ export const ORDERS: Orderi[] =[
     ]
 },
 {orderId:504,createDate:new Date(AWEEKAGO.getTime()+(3*da)),customerName:'Ryan Fleming',csrApprovalDate:BEGINNINGOFTIME,orderStatus:'New',items:
-    [{itemId:1,description:'iPhone', price:19000,qty:1}
+    [{itemId:1,description:'iPhone', price:1900,qty:1}
     ,{itemId:2,description:'HDMI cord', price:196,qty:1}
     ,{itemId:3,description:'Mouse', price:90,qty:1}
     ,{itemId:4,description:'Keyboard', price:162,qty:1}

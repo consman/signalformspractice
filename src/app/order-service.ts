@@ -35,7 +35,7 @@ export class OrderService {
     return result;
   }
 
-  updateOrder(order:Orderi):Observable<boolean>{
+  updateOrder(order:Orderi):Observable<Orderi>{
 
     let result = false;
     this.orders().forEach(ord => {
@@ -46,24 +46,24 @@ export class OrderService {
         ord.items = order.items;
 
         ord.orderStatus = order.orderStatus;
-        //console.log('Order for '+ order.customerName + ' has been updated.')
       }
     });
-    let obsOrds =  of (this.orders());
-    this.ordersSig$.set(obsOrds);
-    return of(result);
+    if (result){
+      let obsOrds =  of (this.orders());
+      this.ordersSig$.set(obsOrds);
+    }
+    else{
+      console.warn('OrderService(update) could not find order ' + order.orderId );
+    }
+    return of(order); 
   }
 
   addNewOrder():Observable<Orderi>{
-    //let newOrder = NEWORDER;
     this.newOrderSig.set(getNewOrder());
     this.newOrderSig().orderId = this.nextOrderId++;
-    //console.log('this.getNewOrder().customerName: ' + this.getNewOrder().customerName);
-    //console.log('this.newOrderSig().customerName = '+ this.newOrderSig().customerName+'  this.newOrderSig().orderId = ' + this.newOrderSig().orderId  + ' and this.nextOrderId = ' + this.nextOrderId);
     this.orders().push(this.newOrderSig());
     let obsOrds =  of (this.orders());
     this.ordersSig$.set(obsOrds);
-    //console.log('Returning order with a customer name of: ' +this.newOrderSig().customerName)
     return of(this.newOrderSig());
   }
 

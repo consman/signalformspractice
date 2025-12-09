@@ -56,13 +56,21 @@
 
         <app-item-list [items]="orderForm.items"></app-item-list>
         
-        @if(!done()){    
+        @if(!done()){   
+        <table><tr><td>
+          <button type="button" (click)="addNewItem()">New Item</button> 
+          </td><td>
           <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
-            Update
+            Save
         </button>
+        </td></tr></table>
         }
         <p class="resultClass">{{result()}}</p>
     </form>
+
+    <!-- Use for debug:
+        <div>ord.items.length = {{ord.items.length}}</div>
+    -->
 }
 
 <button [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>
@@ -70,3 +78,4 @@
 <!-- Use for debug:
 <div>this.orderForm().value() = {{this.orderForm().value() | json }}</div>
 -->
+

@@ -2,14 +2,15 @@
 @let itemForms = items();
 
 <div>
-    Items:
+    Items: 
     <table>
         <tr><th>Description</th><th>Quantity</th><th>Price</th></tr>
         @for(item of itemForms; track $index){
+            @if(item ){
             <tr>
-                <td><input [field]="item.description" class="form-control" /></td>                               
-                <td><input [field]="item.qty" type="number"  class="form-control" /></td>                               
-                <td><input [field]="item.price" type="number" class="form-control" /></td>                                
+                <td><input id="itemdesc_{{$index}}" [field]="item.description" class="form-control" /></td>                               
+                <td><input id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
+                <td><input id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>                                
             </tr>
             @if(item.description().touched() && item.description().invalid()){
                     <div class="error">
@@ -32,9 +33,15 @@
                         }
                     </div>
                 }
-
+            }
         }        
         <tr><td></td><th>Total:</th><th>{{resultTot()| currency}}</th></tr>
     </table>
-       
+   
+
+<!-- Use for debug:
+  <div>itemForms.length = {{itemForms.length}}</div>
+-->
+
+
 </div>

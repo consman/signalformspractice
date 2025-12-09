@@ -43,4 +43,9 @@ describe('Order', () => {
   it('should provide the description of the item in the order', () => {
     expect(component.orderModel().items[0].description).toEqual('Android');
   });
+
+  it('should be able to gracefully add another item to the item list', () => {
+    component.addNewItem();
+    expect(component.orderForm.items.length).toEqual(5);
+  });
 });

@@ -1,7 +1,7 @@
-import { Component, computed, input, signal, Signal, WritableSignal } from '@angular/core';
-import { Field, FieldTree, form } from '@angular/forms/signals';
-import { CurrencyPipe } from '@angular/common';
-import { Item, itemSchema, itemz } from './itemList';
+import { Component, computed, input, WritableSignal } from '@angular/core';
+import { Field, FieldTree } from '@angular/forms/signals';
+import { CurrencyPipe} from '@angular/common';
+import { Item } from './itemList';
 
 @Component({
   selector: 'app-item-list',
@@ -13,12 +13,7 @@ export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
   resultTot = computed<number> ( () => this.getTotal());
-  itemListModel = signal<Item[]>(itemz);
-
-  constructor(){        
-
-  }
-
+  
   getTotal(): number{
    const itemForms = this.items();
    let result = 0;
@@ -26,10 +21,9 @@ export class ItemList {
     itemForms().value().forEach(i => {
       result = result + (i.price * i.qty);
     });
-    //console.log('getTotal says the total is ' + result);
    }
    else{
-    console.log('getTotal says must be unit testing - itemForms is not a function. ');//TODO find out why this happens in unit tests.
+    console.log('getTotal says must be unit testing - itemForms is not a function. ');
    }
    return result;
   }
