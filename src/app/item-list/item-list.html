@@ -8,7 +8,7 @@
         @for(item of itemForms; track $index){
             @if(item ){
             <tr>
-                <td><input id="itemdesc_{{$index}}" [field]="item.description" class="form-control" /></td>                               
+                <td><input data-test="itemDesc" id="itemdesc_{{$index}}" [field]="item.description" class="form-control" /></td>                               
                 <td><input id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
                 <td><input id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>                                
             </tr>

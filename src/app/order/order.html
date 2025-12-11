@@ -6,7 +6,7 @@
         <div class="form-group">
             <label>
                 Customer
-                <input type="text" [field]="orderForm.customerName" class="form-control" placeholder="Enter customer Name here"
+                <input data-test="customerNameInput" type="text" [field]="orderForm.customerName" class="form-control" placeholder="Enter customer Name here"
                  />
             </label>
             @if(orderForm.customerName().invalid() && orderForm.customerName().touched()){
@@ -22,14 +22,14 @@
             <label>
                 Date Ordered
                 <!-- The Order create date should never be changed, only displayed. -->
-                <input type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled class="form-control" />
+                <input data-test="createDate" type="date" value="{{ord.createDate | date: 'yyyy-MM-dd'}}" disabled class="form-control" />
             </label>
         </div>
 
         <div class="form-group">
             <label>
                 CSR Approval Date
-                <input type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
+                <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
 
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - now.getTime() > 0) && orderModel().orderStatus=='Approved') ;
@@ -44,7 +44,7 @@
         <div class="form-group">
             <label>
                 Status
-                <select [field]="orderForm.orderStatus" >
+                <select data-test="status" [field]="orderForm.orderStatus" >
                     <option>New</option>
                     <option>In Progress</option>
                     <option>Approved</option>
@@ -73,7 +73,7 @@
     -->
 }
 
-<button [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>
+<button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>
 
 <!-- Use for debug:
 <div>this.orderForm().value() = {{this.orderForm().value() | json }}</div>

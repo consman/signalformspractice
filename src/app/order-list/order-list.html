@@ -11,7 +11,7 @@
       <table><tr><th>Customer</th><th>Date Created</th><th>Status</th><th> OrderTotal</th></tr>
       @for( ord of ords; track ord){
         <tr class="col-xs-12 col-sm-6 col-md-4 col-lg-3"><td> 
-              <a [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
+              <a data-test="customerName" [routerLink]="['/order',ord.orderId]"> {{ord.customerName}} </a> 
             </td>
             <td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td>
             <td>{{ord.orderStatus}}</td>
@@ -23,7 +23,7 @@
       }
       </table>
     }
-    <button [routerLink]="['/order','add']">Add New Order</button>    
+    <button data-test="addNewOrderButton" [routerLink]="['/order','add']">Add New Order</button>    
     
   </div>
 
