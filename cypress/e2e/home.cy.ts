@@ -28,8 +28,12 @@ describe("Test the Signal forms Practice App", () => {
 
   it("sets the new orders create date to today",()=>{
     cy.get("[data-test='addNewOrderButton']").click(); 
-    // TODO format current date to something here:
-    cy.get("[data-test='createDate']").should("have.value", '2025-12-11');
+      const today = new Date();
+      const isoString = today.toISOString();
+      const now = isoString.substring(0, 10);
+      console.log('In test, \"sets the new orders create date to today\", now = ' + now);
+      cy.get("[data-test='createDate']").should("have.value", now); // might be one day off
+
   });
 
   it("sets the new orders order status to New",()=>{    
@@ -47,5 +51,10 @@ describe("Test the Signal forms Practice App", () => {
    cy.get("[data-test='backToListButton']").click();
    cy.get("[data-test='customerName']").eq(5).should("include.text", 'Customer Name Here');
   });
+
+  //Handles Updates to a new order
+     // verifying resulting order list on order list
+  //Adds a new Item
+  //Updates to a new item..
 
 })
