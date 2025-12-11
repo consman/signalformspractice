@@ -9,8 +9,8 @@
             @if(item ){
             <tr>
                 <td><input data-test="itemDesc" id="itemdesc_{{$index}}" [field]="item.description" class="form-control" /></td>                               
-                <td><input id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
-                <td><input id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>                                
+                <td><input data-test="itemQty" id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
+                <td><input data-test="itemPrice" id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>                                
             </tr>
             @if(item.description().touched() && item.description().invalid()){
                     <div class="error">
@@ -35,7 +35,7 @@
                 }
             }
         }        
-        <tr><td></td><th>Total:</th><th>{{resultTot()| currency}}</th></tr>
+        <tr><td></td><th>Total:</th><th data-test="itemListTotal">{{resultTot()| currency}}</th></tr>
     </table>
    
 

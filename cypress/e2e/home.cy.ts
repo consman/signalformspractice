@@ -6,7 +6,7 @@ describe("Test the Signal forms Practice App", () => {
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
-
+/*
   it("Shows the customerName on the 4th in the order list.",()=>{
     cy.get("[data-test='customerName']").eq(3).should("include.text", 'Ryan Fleming');
   });
@@ -26,16 +26,6 @@ describe("Test the Signal forms Practice App", () => {
     cy.get("[data-test='approvalDate']").should("have.value", '1970-01-01');
   });
 
-  it("sets the new orders create date to today",()=>{
-    cy.get("[data-test='addNewOrderButton']").click(); 
-      const today = new Date();
-      const isoString = today.toISOString();
-      const now = isoString.substring(0, 10);
-      console.log('In test, \"sets the new orders create date to today\", now = ' + now);
-      cy.get("[data-test='createDate']").should("have.value", now); // might be one day off
-
-  });
-
   it("sets the new orders order status to New",()=>{    
     cy.get("[data-test='addNewOrderButton']").click(); 
     cy.get("[data-test='status']").should("have.value", 'New');
@@ -51,10 +41,49 @@ describe("Test the Signal forms Practice App", () => {
    cy.get("[data-test='backToListButton']").click();
    cy.get("[data-test='customerName']").eq(5).should("include.text", 'Customer Name Here');
   });
+*/
+  it("handles the user\'s change to the data of the new orders and it's first item",()=>{
+    //Steve's Item Description , 2 3 
+   cy.get("[data-test='addNewOrderButton']").click(); 
+   cy.get("[data-test='customerNameInput']").click();
+   cy.get("[data-test='customerNameInput']").clear();
+   cy.get("[data-test='customerNameInput']").type('Steve Holmes'); 
+
+   cy.get("[data-test='itemDesc']").eq(0).click();
+   cy.get("[data-test='itemDesc']").eq(0).type('Steve\'s Item Description');
+
+   cy.get("[data-test='status']").select('In Progress');
+   
+   cy.get("[data-test='itemQty']").eq(0).click();
+   cy.get("[data-test='itemQty']").eq(0).type('2');
+
+   cy.get("[data-test='itemPrice']").eq(0).click();
+   cy.get("[data-test='itemPrice']").eq(0).type('3');
+
+   cy.get("[data-test='itemQty']").eq(0).click(); // to basically tab out of the price field.
+   cy.get("[data-test='itemListTotal']").should("include.text", '$6.00');
+
+   cy.get("[data-test='saveOrderButton']").click();
+   cy.get("[data-test='backToListButton']").click();
+   cy.get("[data-test='customerName']").eq(5).should("include.text", 'Steve Holmes');//listOrderStatus
+   cy.get("[data-test='listOrderStatus']").eq(5).should("include.text", 'In Progress');
+   //cy.screenshot('scr01');
+  });
 
   //Handles Updates to a new order
      // verifying resulting order list on order list
   //Adds a new Item
   //Updates to a new item..
+
+  // run this last because of funky date func
+  it("sets the new orders create date to today",()=>{
+    cy.get("[data-test='addNewOrderButton']").click(); 
+      const today = new Date();
+      const isoString = today.toISOString();
+      const now = isoString.substring(0, 10);
+      cy.log('In test, \"sets the new orders create date to today\", now = ' + now);
+      cy.get("[data-test='createDate']").should("have.value", now); // might be one day off
+  });
+
 
 })

@@ -60,7 +60,7 @@
         <table><tr><td>
           <button type="button" (click)="addNewItem()">New Item</button> 
           </td><td>
-          <button type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
+          <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
             Save
         </button>
         </td></tr></table>
