@@ -29,7 +29,7 @@ describe("Test the Signal forms Practice App", () => {
   it("sets the new orders create date to today",()=>{
     cy.get("[data-test='addNewOrderButton']").click(); 
     // TODO format current date to something here:
-    cy.get("[data-test='createDate']").should("have.value", '2025-12-10');
+    cy.get("[data-test='createDate']").should("have.value", '2025-12-11');
   });
 
   it("sets the new orders order status to New",()=>{    
