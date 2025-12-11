@@ -6,7 +6,7 @@ describe("Test the Signal forms Practice App", () => {
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
-/*
+
   it("Shows the customerName on the 4th in the order list.",()=>{
     cy.get("[data-test='customerName']").eq(3).should("include.text", 'Ryan Fleming');
   });
@@ -41,7 +41,7 @@ describe("Test the Signal forms Practice App", () => {
    cy.get("[data-test='backToListButton']").click();
    cy.get("[data-test='customerName']").eq(5).should("include.text", 'Customer Name Here');
   });
-*/
+  
   it("handles the user\'s change to the data of the new orders and it's first item",()=>{
     //Steve's Item Description , 2 3 
    cy.get("[data-test='addNewOrderButton']").click(); 
