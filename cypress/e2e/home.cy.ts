@@ -2,7 +2,7 @@ describe("Test the Signal forms Practice App", () => {
   beforeEach(() => {
     cy.visit("http://localhost:4200");
   });
-/*
+
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
@@ -14,7 +14,6 @@ describe("Test the Signal forms Practice App", () => {
   it("Shows the customerName on the 5th in the order list.",()=>{
     cy.get("[data-test='customerName']").eq(4).should("include.text", 'Magendiran Ganesan');
   });
-//cy.wait(2000);
 
   it("Navigates to the Add Order Page",()=>{
     cy.get("[data-test='addNewOrderButton']").click();    
@@ -67,12 +66,10 @@ describe("Test the Signal forms Practice App", () => {
    cy.get("[data-test='customerName']").eq(5).should("include.text", 'Steve Holmes');
    cy.get("[data-test='listOrderStatus']").eq(5).should("include.text", 'In Progress');
    cy.get("[data-test='listOrderTotal']").eq(5).should("include.text", '$6.00');
-
-
    //cy.screenshot('scr01');
   });
-*/
-it("Provides edit validation for the fields on the Order Page",()=>{
+
+it("Provides edit validation for the fields on the Item List section of the Order Page",()=>{
 
     cy.get("[data-test='addNewOrderButton']").click(); 
     cy.get("[data-test='saveOrderButton']").should('be.disabled');
@@ -88,7 +85,6 @@ it("Provides edit validation for the fields on the Order Page",()=>{
     cy.get("[data-test='itemQty']").eq(0).click();
     cy.get("[data-test='itemListDescErr']").eq(0).should("include.text", 'Description needs at least 3 characters.');  
 
-    //cy.get("[data-test='itemQty']").eq(0).should('be.disabled');
 });
 
 
