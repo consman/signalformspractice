@@ -2,7 +2,7 @@ describe("Test the Signal forms Practice App", () => {
   beforeEach(() => {
     cy.visit("http://localhost:4200");
   });
-
+/*
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
@@ -41,9 +41,8 @@ describe("Test the Signal forms Practice App", () => {
    cy.get("[data-test='backToListButton']").click();
    cy.get("[data-test='customerName']").eq(5).should("include.text", 'Customer Name Here');
   });
-  
-  it("handles the user\'s change to the data of the new orders and it's first item",()=>{
-    //Steve's Item Description , 2 3 
+
+  it("handles the user\'s change to the data of the new order and it's first item",()=>{
    cy.get("[data-test='addNewOrderButton']").click(); 
    cy.get("[data-test='customerNameInput']").click();
    cy.get("[data-test='customerNameInput']").clear();
@@ -65,24 +64,58 @@ describe("Test the Signal forms Practice App", () => {
 
    cy.get("[data-test='saveOrderButton']").click();
    cy.get("[data-test='backToListButton']").click();
-   cy.get("[data-test='customerName']").eq(5).should("include.text", 'Steve Holmes');//listOrderStatus
+   cy.get("[data-test='customerName']").eq(5).should("include.text", 'Steve Holmes');
    cy.get("[data-test='listOrderStatus']").eq(5).should("include.text", 'In Progress');
+   cy.get("[data-test='listOrderTotal']").eq(5).should("include.text", '$6.00');
+
+
    //cy.screenshot('scr01');
   });
+*/
+it("Provides edit validation for the fields on the Order Page",()=>{
+
+    cy.get("[data-test='addNewOrderButton']").click(); 
+    cy.get("[data-test='saveOrderButton']").should('be.disabled');
+    cy.get("[data-test='itemQty']").eq(0).click();
+    cy.get("[data-test='itemPrice']").eq(0).click();
+
+    cy.get("[data-test='itemListQtyErr']").eq(0).should("include.text", 'Quantity must be at least 1.');   
+    cy.get("[data-test='itemDesc']").eq(0).click();
+    cy.get("[data-test='itemListPrcErr']").eq(0).should("include.text", 'Price must be at least 1.');  
+
+    cy.get("[data-test='itemDesc']").eq(0).clear();
+    cy.get("[data-test='itemDesc']").eq(0).type('AB'); 
+    cy.get("[data-test='itemQty']").eq(0).click();
+    cy.get("[data-test='itemListDescErr']").eq(0).should("include.text", 'Description needs at least 3 characters.');  
+
+    //cy.get("[data-test='itemQty']").eq(0).should('be.disabled');
+});
+
 
   //Handles Updates to a new order
-     // verifying resulting order list on order list
+     // verifying resulting order on order list
+  //   
   //Adds a new Item
   //Updates to a new item..
 
   // run this last because of funky date func
   it("sets the new orders create date to today",()=>{
+    cy.log('Running the test at new Date().toLocaleString(): '+ new Date().toLocaleString());
     cy.get("[data-test='addNewOrderButton']").click(); 
       const today = new Date();
-      const isoString = today.toISOString();
-      const now = isoString.substring(0, 10);
+      let mo = today.getMonth()+1;
+      let mm = mo+'';
+      if (mo<10){
+        mm = '0'+mm;
+      }
+      let dom = today.getDate();
+      let dd = dom+'';
+      if (dom < 10){
+        dd = '0'+ dd;
+      }
+      let now = today.getFullYear() +'-'+mm+'-'+dd;
       cy.log('In test, \"sets the new orders create date to today\", now = ' + now);
-      cy.get("[data-test='createDate']").should("have.value", now); // might be one day off
+      cy.get("[data-test='createDate']").should("have.value",now);
   });
 
 

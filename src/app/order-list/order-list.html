@@ -15,7 +15,7 @@
             </td>
             <td>{{ord.createDate | date: 'EEEE MM/dd/yyyy'}} </td>
             <td data-test="listOrderStatus" >{{ord.orderStatus}}</td>
-            <td class="orderTotal">
+            <td data-test="listOrderTotal" class="orderTotal">
             @if(ord.orderId != undefined ){
               {{orderTotalsMapSig().get(ord.orderId) | currency }} 
             }

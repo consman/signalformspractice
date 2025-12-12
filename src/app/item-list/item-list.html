@@ -15,21 +15,21 @@
             @if(item.description().touched() && item.description().invalid()){
                     <div class="error">
                         @for(error of item.description().errors(); track error.kind){
-                            <span>{{error.message}}</span>
+                            <span data-test="itemListDescErr">{{error.message}}</span>
                         }
                     </div>
                 } 
             @if(item.qty().touched() && item.qty().invalid()){
                     <div class="error">
                         @for(error of item.qty().errors(); track error.kind){
-                            <span>{{error.message}}</span>
+                            <span data-test="itemListQtyErr" >{{error.message}}</span>
                         }
                     </div>
                 } 
             @if(item.price().touched() && item.price().invalid()){
                     <div class="error">
                         @for(error of item.price().errors(); track error.kind){
-                            <span>{{error.message}}</span>
+                            <span data-test="itemListPrcErr">{{error.message}}</span>
                         }
                     </div>
                 }
