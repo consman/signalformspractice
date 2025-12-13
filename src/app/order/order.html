@@ -32,11 +32,11 @@
                 <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
 
-            @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - now.getTime() > 0) && orderModel().orderStatus=='Approved') ;
+            @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - nowB > 0) && orderModel().orderStatus=='Approved') ;
             
             @if(  approvedWithFutureDate  && (orderForm.orderStatus().touched() || orderForm.csrApprovalDate().touched()  )){
                 <div class="error">
-                    <span>The CSR Approval Date must not be in the future if the order is approved.</span>
+                    <span data-test="csrApprovalErr">The CSR Approval Date must not be in the future if the order is approved.</span>
                 </div>                
             }
         </div>
@@ -58,7 +58,7 @@
         
         @if(!done()){   
         <table><tr><td>
-          <button type="button" (click)="addNewItem()">New Item</button> 
+          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button> 
           </td><td>
           <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
             Save

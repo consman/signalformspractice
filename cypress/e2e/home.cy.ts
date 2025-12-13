@@ -87,32 +87,61 @@ it("Provides edit validation for the fields on the Item List section of the Orde
 
 });
 
+it("Adds a new item",()=>{
+  cy.get("[data-test='customerName']").eq(0).click();
+  cy.get("[data-test='addNewItemButton']").click();
+  cy.get("[data-test='itemDesc']").eq(4).clear()
+  cy.get("[data-test='itemDesc']").eq(4).type('Michael\'s 5th item');
+  cy.get("[data-test='itemQty']").eq(4).clear().type('3');
+  cy.get("[data-test='itemPrice']").eq(4).clear().type('7');
+  cy.get("[data-test='itemQty']").eq(4).click();
+  cy.get("[data-test='itemListTotal']").should("include.text", '$5,699.00');
+  cy.get("[data-test='saveOrderButton']").click();
+  cy.get("[data-test='backToListButton']").click();
+  cy.get("[data-test='listOrderTotal']").eq(0).should("include.text", '$5,699.00');
+});
 
-  //Handles Updates to a new order
-     // verifying resulting order on order list
-  //   
-  //Adds a new Item
-  //Updates to a new item..
+it("CSR can approve if the Approval date is not in the future",()=>{
+    let tomorrowD= new Date(new Date().getTime()+24*60*60*1000);
+    cy.log('Testing the Approval date validation func and tomorrow is: '+ tomorrowD);
 
-  // run this last because of funky date func
+    cy.get("[data-test='customerName']").eq(1).click(); 
+    cy.get("[data-test='approvalDate']").clear().type(getDateStringForCypress(tomorrowD));
+    cy.get("[data-test='status']").select('Approved');
+    cy.get("[data-test='customerNameInput']").click();
+    cy.get("[data-test='csrApprovalErr']").should("include.text", 'The CSR Approval Date must not be in the future if the order is approved.');
+    cy.get("[data-test='approvalDate']").clear().type(getDateStringForCypress(new Date()));
+    cy.get("[data-test='saveOrderButton']").click();
+    cy.get("[data-test='backToListButton']").click();
+    cy.get("[data-test='listOrderStatus']").eq(1).should("include.text", 'Approved'); 
+
+});
+
   it("sets the new orders create date to today",()=>{
-    cy.log('Running the test at new Date().toLocaleString(): '+ new Date().toLocaleString());
+    cy.log('Running the test at new Date().toLocaleString(): '+ new Date().toLocaleString());        
     cy.get("[data-test='addNewOrderButton']").click(); 
-      const today = new Date();
-      let mo = today.getMonth()+1;
-      let mm = mo+'';
-      if (mo<10){
-        mm = '0'+mm;
-      }
-      let dom = today.getDate();
-      let dd = dom+'';
-      if (dom < 10){
-        dd = '0'+ dd;
-      }
-      let now = today.getFullYear() +'-'+mm+'-'+dd;
-      cy.log('In test, \"sets the new orders create date to today\", now = ' + now);
-      cy.get("[data-test='createDate']").should("have.value",now);
+
+    const today = new Date();
+    let now = getDateStringForCypress(today);
+
+    cy.log('In test, \"sets the new orders create date to today\", now = ' + now);
+    cy.get("[data-test='createDate']").should("have.value",now);
+    cy.get("[data-test='backToListButton']").click();
   });
-
-
 })
+
+export function getDateStringForCypress(target:Date):string{
+  let result ='';
+  let mo = target.getMonth()+1;
+    let mm = mo+'';
+    if (mo<10){
+      mm = '0'+mm;
+    }
+    let dom = target.getDate();
+    let dd = dom+'';
+    if (dom < 10){
+      dd = '0'+ dd;
+    }
+    result = target.getFullYear() +'-'+mm+'-'+dd;
+  return result;
+}
