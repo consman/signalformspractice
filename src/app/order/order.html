@@ -31,6 +31,8 @@
                 CSR Approval Date
                 <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
+            <span>csrApprovalDate: {{orderModel().csrApprovalDate.getTime()}}</span><br>
+            <span>nowB: {{nowB}}</span>  
 
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - nowB > 0) && orderModel().orderStatus=='Approved') ;
             
