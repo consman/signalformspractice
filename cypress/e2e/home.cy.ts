@@ -111,6 +111,7 @@ it("CSR can approve if the Approval date is not in the future",()=>{
     cy.get("[data-test='customerNameInput']").click();
     cy.get("[data-test='csrApprovalErr']").should("include.text", 'The CSR Approval Date must not be in the future if the order is approved.');
     cy.get("[data-test='approvalDate']").clear().type(getDateStringForCypress(new Date()));
+    cy.get("[data-test='customerNameInput']").click(); // just as a small delay
     cy.get("[data-test='saveOrderButton']").click();
     cy.get("[data-test='backToListButton']").click();
     cy.get("[data-test='listOrderStatus']").eq(1).should("include.text", 'Approved'); 
