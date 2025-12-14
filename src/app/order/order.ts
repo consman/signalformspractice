@@ -18,10 +18,9 @@ import { Item } from '../item-list/itemList';
 
 export class Order { 
 
-
   orderService = inject(OrderService); 
   now = new Date();
-  nowB = (Math.round(this.now.getTime()/(1000*60*60*24)) * 1000 *60*60*24)-1;
+  nowB = (Math.round(this.now.getTime()/(1000*60*60*24)) * 1000 *60*60*24);
   
   ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
