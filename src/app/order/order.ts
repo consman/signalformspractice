@@ -20,10 +20,8 @@ export class Order {
 
   orderService = inject(OrderService); 
   now = new Date();
-  mod = this.now.getTime() % (1000*60*60*24) ;
-  
-  nowB = this.now.getTime() - this.mod; // (Math.round(this.now.getTime()/(1000*60*60*24)) * 1000 *60*60*24);
-
+  today = getBasicDateString(this.now); 
+  startOfToday: Date = new Date(this.today);
   
   ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
@@ -37,10 +35,6 @@ export class Order {
   orderTotal: WritableSignal<number> = signal(0);
 
   constructor(route: ActivatedRoute, _router: Router,private renderer: Renderer2){
-
-    console.log('this.now.getTime() = ' + this.now.getTime());
-    console.log('mod = ' + this.mod);
-    console.log('nowB = ' + this.nowB);
 
     
     this.orderId.set(0);
@@ -153,17 +147,11 @@ export class Order {
     if(target){
       let ind = fItems.findIndex((i:Item) =>{return target?.itemId == i.itemId} );
       console.log('The index in deleteItem = ' + ind);
-      console.log('BEFORE: fItems[0].itemId = '+ fItems[0].itemId +
-        ' fItems[1].itemId = '+ fItems[1].itemId +
-        ' fItems[2].itemId = '+ fItems[2].itemId 
-      );
+
       fItems.splice(ind,1);
       console.log('The length of fItems after splice = ' + fItems.length);
       
-      console.log('AFTER: fItems[0].itemId = '+ fItems[0].itemId +
-        ' fItems[1].itemId = '+ fItems[1].itemId +
-        ' fItems[2].itemId = '+ fItems[2].itemId 
-      );
+
       let tempOrd = this.orderModel();
       let newOrd = this.getNewOrderFromOldOrder(tempOrd);
       newOrd.items = fItems;
@@ -171,6 +159,7 @@ export class Order {
         this.orderModel.set(o);        
       })) );
     }
+    this.reRenderItems('deleteItem');
   }
 
 
@@ -210,6 +199,18 @@ export class Order {
       });
   }
 
+}
+
+export function getBasicDateString(d:Date): string{ 
+    let mo = ''+(d.getMonth()+1);
+    if ((d.getMonth()+1) < 10){
+        mo = '0'+mo;
+    }
+    let da = ''+(d.getDate());
+    if( d.getDate() < 10){
+        da = '0'+da;
+    }
+    return ''+d.getFullYear() +'-' + mo + '-'+ da;
 }
 
 export function getNewItem(newId:number): Item  { 

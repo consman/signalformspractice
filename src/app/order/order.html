@@ -32,11 +32,7 @@
                 <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
             
-            <span>csrApprovalDate: {{orderModel().csrApprovalDate.getTime()}}</span><br>
-            <span>nowB: {{nowB}}</span>  
-            
-
-            @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - nowB > 0) && orderModel().orderStatus=='Approved') ;
+            @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - startOfToday.getTime() > 0) && orderModel().orderStatus=='Approved') ;
             
             @if(  approvedWithFutureDate  && (orderForm.orderStatus().touched() || orderForm.csrApprovalDate().touched()  )){
                 <div class="error">
@@ -85,6 +81,9 @@
             ConsItems
         </button>
         </td>
+
+            <span>csrApprovalDate: {{orderModel().csrApprovalDate.getTime()}}</span><br>
+            <span>nowB: {{startOfToday.getTime()}}</span>  
     -->
         
 }
