@@ -33,7 +33,8 @@ describe('Order', () => {
   });
 
   it('should provide the item Id of the items in the order', () => {
-    expect(component.orderForm.items.length).toEqual(4);
+    expect(component.orderForm.items().value()[0].itemId).toEqual(1);
+    expect(component.orderForm.items().value()[3].itemId).toEqual(4);
   });
 
   it('should provide the number of the items in the order', () => {
@@ -46,6 +47,13 @@ describe('Order', () => {
 
   it('should be able to gracefully add another item to the item list', () => {
     component.addNewItem();
-    expect(component.orderForm.items.length).toEqual(5);
+    expect(component.orderModel().items.length).toEqual(5);
+  });
+
+  it('should be able to delete an item from the item list', () => {
+    component.deleteItem(3);
+    setTimeout(() =>{
+      expect(component.orderModel().items.length).toEqual(3);
+    },200);    
   });
 });

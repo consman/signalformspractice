@@ -5,5 +5,5 @@ import { OrderList } from './order-list/order-list';
 export const routes: Routes = [
     { path: '', component: OrderList},
     { path: 'order/:orderIdOrFunc', component: Order},
-    { path: 'orders', component: OrderList},
+    { path: 'orders', component: OrderList}
 ];

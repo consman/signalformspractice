@@ -31,8 +31,10 @@
                 CSR Approval Date
                 <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
+            
             <span>csrApprovalDate: {{orderModel().csrApprovalDate.getTime()}}</span><br>
             <span>nowB: {{nowB}}</span>  
+            
 
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - nowB > 0) && orderModel().orderStatus=='Approved') ;
             
@@ -56,7 +58,11 @@
             </label>
         </div>
 
-        <app-item-list [items]="orderForm.items"></app-item-list>
+        <app-item-list 
+          [items]="orderForm.items" 
+          (onDelete)="deleteItem($event)"
+        >
+        </app-item-list>
         
         @if(!done()){   
         <table><tr><td>
@@ -72,7 +78,15 @@
 
     <!-- Use for debug:
         <div>ord.items.length = {{ord.items.length}}</div>
+
+
+        <td>
+          <button type="button" (click)="consOrderModelItems()">
+            ConsItems
+        </button>
+        </td>
     -->
+        
 }
 
 <button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>

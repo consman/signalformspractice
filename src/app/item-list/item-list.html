@@ -4,13 +4,29 @@
 <div>
     Items: 
     <table>
-        <tr><th>Description</th><th>Quantity</th><th>Price</th></tr>
+        <tr><th>Description</th><th>Quantity</th><th>Price</th><th>Delete</th></tr>
         @for(item of itemForms; track $index){
             @if(item ){
             <tr>
                 <td><input data-test="itemDesc" id="itemdesc_{{$index}}" [field]="item.description" class="form-control" /></td>                               
                 <td><input data-test="itemQty" id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
-                <td><input data-test="itemPrice" id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>                                
+                <td><input data-test="itemPrice" id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>
+                <td class="deleteItem" > 
+                    <!--
+                    <button type="click"
+                        data-test="deleteItem" 
+                       id="deleteItem_{{$index}}" 
+                       [routerLink]="['/order','deleteItem'+item().value().itemId]">
+                       X
+                    </button>
+                    -->
+                    <span type="button" data-test="deleteItem" 
+                            id="deleteItem_{{$index}}"
+                            (click)="deleteItem(item().value().itemId)"
+                            >&#x1F5D1;
+                    </span>    
+
+                </td>                                
             </tr>
             @if(item.description().touched() && item.description().invalid()){
                     <div class="error">

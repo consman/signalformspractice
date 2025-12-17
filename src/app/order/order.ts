@@ -20,7 +20,10 @@ export class Order {
 
   orderService = inject(OrderService); 
   now = new Date();
-  nowB = (Math.round(this.now.getTime()/(1000*60*60*24)) * 1000 *60*60*24);
+  mod = this.now.getTime() % (1000*60*60*24) ;
+  
+  nowB = this.now.getTime() - this.mod; // (Math.round(this.now.getTime()/(1000*60*60*24)) * 1000 *60*60*24);
+
   
   ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
@@ -28,15 +31,21 @@ export class Order {
   result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
 
-  orderModel = signal<Orderi>(initialOrder);
+  orderModel = signal<Orderi>(initialOrder); 
   orderForm = form(this.orderModel, orderSchema);
 
   orderTotal: WritableSignal<number> = signal(0);
 
   constructor(route: ActivatedRoute, _router: Router,private renderer: Renderer2){
 
+    console.log('this.now.getTime() = ' + this.now.getTime());
+    console.log('mod = ' + this.mod);
+    console.log('nowB = ' + this.nowB);
+
+    
     this.orderId.set(0);
     let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
+    //console.log('orderIdOrFunc = ' + orderIdOrFunc);
     let tempNewOrderId: number | undefined  = 0;
     if(orderIdOrFunc == 'add'){
       
@@ -47,24 +56,20 @@ export class Order {
           this.orderId.set(o.orderId);
         }
         this.orderModel.set(o); 
-        o.items.forEach(i=>{
-            let temp = this.orderTotal() ;
-            this.orderTotal.set(temp + (i.price * i.qty));
-          });  
+        this.updateOrderTotal(o); 
         })));  
     }
-    else{ // not add but coming in with an existing order
+
+    else{ 
       
       if(orderIdOrFunc){      
+        //console.log('Going for orderIdOrFunc '+ orderIdOrFunc);
         let myInt = parseInt(orderIdOrFunc);
         if(myInt){
           this.orderId.set(myInt);
           this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
             this.orderModel.set(o);   
-            o.items.forEach(i=>{
-              let temp = this.orderTotal() ;
-              this.orderTotal.set(temp + (i.price * i.qty));
-            });        
+            this.updateOrderTotal(o);      
           })));      
         }
         else{
@@ -77,25 +82,39 @@ export class Order {
     }
   }
 
+  updateOrderTotal(o:Orderi):void{
+    let temp = 0;
+    o.items.forEach(i=>{
+       //this.orderTotal() ;
+      temp = temp + (i.price * i.qty);
+    });  
+    this.orderTotal.set(temp);
+  }
+
   onSubmit(event: Event): void{
     event.preventDefault();
     if (event.type == 'submit'){
-      
-      submit(this.orderForm, async () => {        
+      //this.orderModel().items.splice(3,1);
+      submit(this.orderForm, async () => {    
         const orderM = this.orderModel();
         let updateResult = this.orderService.updateOrder(orderM);
+        
         if (updateResult){ //TODO this is really an observable of an order - not a boolean 
-          
           this.result.set('Success!');
           this.done.set(true);
         }
         else {
           this.result.set('Order not updated. Something went wrong. Please check the remote service.');
         }
-
       });
+      console.log('Save after delete item H');
     }
+    else{
+      console.log('The event type = ' +event.type);
+    }
+    console.log('Save after delete item I');
   }
+
 
   getNewOrderFromOldOrder(old:Orderi):Orderi{
     return {
@@ -110,22 +129,87 @@ export class Order {
 
   addNewItem():void{
     
-    let newItem = getNewItem(this.orderModel().items.length + 1);//first item number is 1, not 0
+    let newItem = getNewItem(this.orderForm.items().value().length + 1); //first item number is 1, not 0
+    let fItems = this.orderForm.items().value(); 
+    fItems.push(newItem);
     let tempOrd = this.orderModel();
-    tempOrd.items.push(newItem);
-    this.ordSig$.set(of(tempOrd));
+    let newOrd = this.getNewOrderFromOldOrder(tempOrd);
+    newOrd.items = fItems;
+    this.ordSig$.set(this.orderService.updateOrder(newOrd).pipe(tap(o=>{
+      this.orderModel.set(o);        
+    })) );
+    this.reRenderItems('newItem');
+  }   
 
-    //TODO Fix this hack!
-    let newLength = this.orderForm().value().items.length;
-    let id= '#itemdesc_'+(newLength-2);
-    this.renderer.selectRootElement(id).focus();
-    id= '#itemqty_'+(newLength-2);
-    this.renderer.selectRootElement(id).focus();
-      setTimeout(() =>{
-        id= '#itemdesc_'+(newLength-1);
-        this.renderer.selectRootElement(id).focus();        
-      }, 8); // app runs fine with only 1 ms delay, but need to bump to 7 at least for Unit tests to pass    
+  deleteItem(itemId:number):void{
+    console.log('Deleting itemId = ' +itemId);
+    let fItems = this.orderForm.items().value(); 
+    let target: Item | undefined;
+    fItems.forEach(i=>{
+      if (i.itemId == itemId){
+        target = i;
+      }
+    });
+    if(target){
+      let ind = fItems.findIndex((i:Item) =>{return target?.itemId == i.itemId} );
+      console.log('The index in deleteItem = ' + ind);
+      console.log('BEFORE: fItems[0].itemId = '+ fItems[0].itemId +
+        ' fItems[1].itemId = '+ fItems[1].itemId +
+        ' fItems[2].itemId = '+ fItems[2].itemId 
+      );
+      fItems.splice(ind,1);
+      console.log('The length of fItems after splice = ' + fItems.length);
+      
+      console.log('AFTER: fItems[0].itemId = '+ fItems[0].itemId +
+        ' fItems[1].itemId = '+ fItems[1].itemId +
+        ' fItems[2].itemId = '+ fItems[2].itemId 
+      );
+      let tempOrd = this.orderModel();
+      let newOrd = this.getNewOrderFromOldOrder(tempOrd);
+      newOrd.items = fItems;
+      this.ordSig$.set(this.orderService.updateOrder(newOrd).pipe(tap(o=>{
+        this.orderModel.set(o);        
+      })) );
+    }
   }
+
+
+  reRenderItems(func:string): void {
+
+    //TODO Fix this hack! IT simulates the user clicking on some of the existing field so that the 
+    let tempOrd = this.orderModel();
+
+    //let newLength = tempOrd.items.length > 1 ? tempOrd.items.length : 1;
+    let ind = 0;
+    if (func =='deleteItem'){      
+      ind = tempOrd.items.length-1
+    }
+    if(func !='deleteItem' || tempOrd.items.length > 0){ 
+      console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
+      let id= '#itemprc_'+ind;
+      if  (!(func == 'newItem' && tempOrd.items.length < 2)) {
+        
+        this.renderer.selectRootElement(id).focus();
+        id= '#itemqty_'+ind;
+        this.renderer.selectRootElement(id).focus();
+      }   
+        setTimeout(() =>{
+          id= '#itemdesc_'+ind;
+          this.renderer.selectRootElement(id).focus();        
+        }, 100); // app runs fine with only 1 ms delay, but need to bump to 7 at least for Unit tests to pass         
+    }
+    
+  }
+
+    consOrderModelItems(): void {
+      this.orderModel().items.forEach(i =>{
+        console.log('M item id = ' + i.itemId + ' items desc = ' +i.description);
+      });
+      this.orderForm().value().items.forEach(i =>{
+        console.log('F item id = ' + i.itemId + ' items desc = ' +i.description);
+      });
+  }
+
 }
 
 export function getNewItem(newId:number): Item  { 

@@ -2,7 +2,7 @@ describe("Test the Signal forms Practice App", () => {
   beforeEach(() => {
     cy.visit("http://localhost:4200");
   });
-
+  
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
@@ -90,6 +90,8 @@ it("Provides edit validation for the fields on the Item List section of the Orde
 it("Adds a new item",()=>{
   cy.get("[data-test='customerName']").eq(0).click();
   cy.get("[data-test='addNewItemButton']").click();
+  cy.get("[data-test='itemQty']").eq(2).click();
+  cy.get("[data-test='itemDesc']").eq(2).click();
   cy.get("[data-test='itemDesc']").eq(4).clear()
   cy.get("[data-test='itemDesc']").eq(4).type('Michael\'s 5th item');
   cy.get("[data-test='itemQty']").eq(4).clear().type('3');
@@ -129,6 +131,8 @@ it("CSR can approve if the Approval date is not in the future",()=>{
     cy.get("[data-test='createDate']").should("have.value",now);
     cy.get("[data-test='backToListButton']").click();
   });
+
+  
 })
 
 export function getDateStringForCypress(target:Date):string{

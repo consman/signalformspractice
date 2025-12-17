@@ -112,3 +112,10 @@ button:disabled {
   margin: 0.5rem 0;
   color: #333;
 }
+
+.deleteItem{
+  font-size: large;
+  font-weight: bolder;   
+  text-align: center;
+  
+}

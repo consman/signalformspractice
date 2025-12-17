@@ -1,8 +1,7 @@
-import { Component, computed, input, WritableSignal } from '@angular/core';
+import { Component, computed, EventEmitter, input, Output } from '@angular/core';
 import { Field, FieldTree } from '@angular/forms/signals';
 import { CurrencyPipe} from '@angular/common';
 import { Item } from './itemList';
-
 @Component({
   selector: 'app-item-list',
   imports: [Field,CurrencyPipe],
@@ -13,6 +12,11 @@ export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
   resultTot = computed<number> ( () => this.getTotal());
+
+  @Output()
+  onDelete = new EventEmitter<number>();
+
+  constructor(){}
   
   getTotal(): number{
    const itemForms = this.items();
@@ -23,10 +27,16 @@ export class ItemList {
     });
    }
    else{
-    console.log('getTotal says must be unit testing - itemForms is not a function. ');
+    console.log('getTotal says must be unit testing - itemForms is not a function. '); 
+    console.log(' itemForms.length = '+ itemForms.length);
    }
    return result;
   }
-}
 
+  deleteItem(itemId:number):void{
+    console.log('The incoming item Id = ' + itemId); 
+    this.onDelete.emit(itemId);
+  }
+
+}
 
