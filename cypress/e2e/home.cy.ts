@@ -2,7 +2,7 @@ describe("Test the Signal forms Practice App", () => {
   beforeEach(() => {
     cy.visit("http://localhost:4200");
   });
-  
+
   it("Shows the title on the home page.",()=>{
     cy.title().should("eq","Signalformspractice");
   });
@@ -132,6 +132,16 @@ it("CSR can approve if the Approval date is not in the future",()=>{
     cy.get("[data-test='backToListButton']").click();
   });
 
+it("deletes an item from the item list gracefully using Output and emitters",()=>{
+  //delete the power cord (2nd item) on the list and confirm total is decreaded by 188 
+  cy.get("[data-test='customerName']").eq(1).click(); //Thomas Amsler's order
+  cy.get("[data-test='deleteItem']").eq(1).click(); //2nd item
+
+  cy.get("[data-test='itemListTotal']").should("include.text", '$355.00');
+  cy.get("[data-test='saveOrderButton']").click();
+  cy.get("[data-test='backToListButton']").click();
+  cy.get("[data-test='listOrderTotal']").eq(1).should("include.text", '$355.00'); 
+});
   
 })
 
