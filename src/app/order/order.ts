@@ -53,9 +53,7 @@ export class Order {
         this.updateOrderTotal(o); 
         })));  
     }
-
-    else{ 
-      
+    else{ //here we are just retrieving an existing order
       if(orderIdOrFunc){      
         //console.log('Going for orderIdOrFunc '+ orderIdOrFunc);
         let myInt = parseInt(orderIdOrFunc);
@@ -101,12 +99,12 @@ export class Order {
           this.result.set('Order not updated. Something went wrong. Please check the remote service.');
         }
       });
-      console.log('Save after delete item H');
+      //console.log('Save after delete item H');
     }
     else{
       console.log('The event type = ' +event.type);
     }
-    console.log('Save after delete item I');
+    //console.log('Save after delete item I');
   }
 
 
@@ -123,20 +121,14 @@ export class Order {
 
   addNewItem():void{
     
-    let newItem = getNewItem(this.orderForm.items().value().length + 1); //first item number is 1, not 0
-    let fItems = this.orderForm.items().value(); 
-    fItems.push(newItem);
-    let tempOrd = this.orderModel();
-    let newOrd = this.getNewOrderFromOldOrder(tempOrd);
-    newOrd.items = fItems;
-    this.ordSig$.set(this.orderService.updateOrder(newOrd).pipe(tap(o=>{
-      this.orderModel.set(o);        
-    })) );
-    this.reRenderItems('newItem');
+    let itemsLength = this.orderForm.items().value().length;
+    let newItem =getNewItem(itemsLength + 1);
+    this.orderModel().items.push(newItem);
+   this.reRenderItems('newItem');
   }   
 
   deleteItem(itemId:number):void{
-    console.log('Deleting itemId = ' +itemId);
+    //console.log('Deleting itemId = ' +itemId);
     let fItems = this.orderForm.items().value(); 
     let target: Item | undefined;
     fItems.forEach(i=>{
@@ -146,10 +138,10 @@ export class Order {
     });
     if(target){
       let ind = fItems.findIndex((i:Item) =>{return target?.itemId == i.itemId} );
-      console.log('The index in deleteItem = ' + ind);
+      //console.log('The index in deleteItem = ' + ind);
 
       fItems.splice(ind,1);
-      console.log('The length of fItems after splice = ' + fItems.length);
+      //console.log('The length of fItems after splice = ' + fItems.length);
       
 
       let tempOrd = this.orderModel();
@@ -174,7 +166,7 @@ export class Order {
       ind = tempOrd.items.length-1
     }
     if(func !='deleteItem' || tempOrd.items.length > 0){ 
-      console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
+      //console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
       let id= '#itemprc_'+ind;
       if  (!(func == 'newItem' && tempOrd.items.length < 2)) {
         

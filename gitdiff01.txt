@@ -1,0 +1,171 @@
+diff --git a/src/app/app.css b/src/app/app.css
+index 07454ab..863273c 100644
+--- a/src/app/app.css
++++ b/src/app/app.css
+@@ -118,4 +118,5 @@ button:disabled {
+   font-weight: bolder;   
+   text-align: center;
+   
+-}
+\ No newline at end of file
++}
++.pointer {cursor: pointer;}
+\ No newline at end of file
+diff --git a/src/app/item-list/item-list.html b/src/app/item-list/item-list.html
+index da18b43..d8cf049 100644
+--- a/src/app/item-list/item-list.html
++++ b/src/app/item-list/item-list.html
+@@ -12,17 +12,11 @@
+                 <td><input data-test="itemQty" id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
+                 <td><input data-test="itemPrice" id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>
+                 <td class="deleteItem" > 
+-                    <!--
+-                    <button type="click"
+-                        data-test="deleteItem" 
+-                       id="deleteItem_{{$index}}" 
+-                       [routerLink]="['/order','deleteItem'+item().value().itemId]">
+-                       X
+-                    </button>
+-                    -->
++                    
+                     <span type="button" data-test="deleteItem" 
+                             id="deleteItem_{{$index}}"
+                             (click)="deleteItem(item().value().itemId)"
++                            class="pointer"
+                             >&#x1F5D1;
+                     </span>    
+ 
+@@ -53,10 +47,11 @@
+         }        
+         <tr><td></td><th>Total:</th><th data-test="itemListTotal">{{resultTot()| currency}}</th></tr>
+     </table>
+-   
++
+ 
+ <!-- Use for debug:
+   <div>itemForms.length = {{itemForms.length}}</div>
++  <div>itemForms[itemForms.length -1].description = {{items()[itemForms.length -1].description}}</div>
+ -->
+ 
+ 
+diff --git a/src/app/item-list/item-list.ts b/src/app/item-list/item-list.ts
+index a70a078..ffdb570 100644
+--- a/src/app/item-list/item-list.ts
++++ b/src/app/item-list/item-list.ts
+@@ -33,10 +33,9 @@ export class ItemList {
+    return result;
+   }
+ 
+-  deleteItem(itemId:number):void{
+-    console.log('The incoming item Id = ' + itemId); 
++  deleteItem(itemId:number):void{    
++    //console.log('The incoming item Id = ' + itemId); 
+     this.onDelete.emit(itemId);
+   }
+-
+ }
+ 
+diff --git a/src/app/order-service.ts b/src/app/order-service.ts
+index bc58fbb..50fbfe8 100644
+--- a/src/app/order-service.ts
++++ b/src/app/order-service.ts
+@@ -39,7 +39,7 @@ export class OrderService {
+   updateOrder(order:Orderi):Observable<Orderi>{
+ 
+     let result = false;
+-    console.log('Going for update order and the numbr of items is: ' +order.items.length);
++    //console.log('Going for update order and the numbr of items is: ' +order.items.length);
+     this.orders().forEach(ord => {
+       if (ord.orderId == order.orderId){
+         result = true;
+diff --git a/src/app/order/order.html b/src/app/order/order.html
+index 8257e0e..7d97968 100644
+--- a/src/app/order/order.html
++++ b/src/app/order/order.html
+@@ -62,7 +62,7 @@
+         
+         @if(!done()){   
+         <table><tr><td>
+-          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button> 
++          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button>
+           </td><td>
+           <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
+             Save
+diff --git a/src/app/order/order.ts b/src/app/order/order.ts
+index ffeff94..c1e3dc8 100644
+--- a/src/app/order/order.ts
++++ b/src/app/order/order.ts
+@@ -53,9 +53,7 @@ export class Order {
+         this.updateOrderTotal(o); 
+         })));  
+     }
+-
+-    else{ 
+-      
++    else{ //here we are just retrieving an existing order
+       if(orderIdOrFunc){      
+         //console.log('Going for orderIdOrFunc '+ orderIdOrFunc);
+         let myInt = parseInt(orderIdOrFunc);
+@@ -101,12 +99,12 @@ export class Order {
+           this.result.set('Order not updated. Something went wrong. Please check the remote service.');
+         }
+       });
+-      console.log('Save after delete item H');
++      //console.log('Save after delete item H');
+     }
+     else{
+       console.log('The event type = ' +event.type);
+     }
+-    console.log('Save after delete item I');
++    //console.log('Save after delete item I');
+   }
+ 
+ 
+@@ -123,20 +121,14 @@ export class Order {
+ 
+   addNewItem():void{
+     
+-    let newItem = getNewItem(this.orderForm.items().value().length + 1); //first item number is 1, not 0
+-    let fItems = this.orderForm.items().value(); 
+-    fItems.push(newItem);
+-    let tempOrd = this.orderModel();
+-    let newOrd = this.getNewOrderFromOldOrder(tempOrd);
+-    newOrd.items = fItems;
+-    this.ordSig$.set(this.orderService.updateOrder(newOrd).pipe(tap(o=>{
+-      this.orderModel.set(o);        
+-    })) );
+-    this.reRenderItems('newItem');
++    let itemsLength = this.orderForm.items().value().length;
++    let newItem =getNewItem(itemsLength + 1);
++    this.orderModel().items.push(newItem);
++   this.reRenderItems('newItem');
+   }   
+ 
+   deleteItem(itemId:number):void{
+-    console.log('Deleting itemId = ' +itemId);
++    //console.log('Deleting itemId = ' +itemId);
+     let fItems = this.orderForm.items().value(); 
+     let target: Item | undefined;
+     fItems.forEach(i=>{
+@@ -146,10 +138,10 @@ export class Order {
+     });
+     if(target){
+       let ind = fItems.findIndex((i:Item) =>{return target?.itemId == i.itemId} );
+-      console.log('The index in deleteItem = ' + ind);
++      //console.log('The index in deleteItem = ' + ind);
+ 
+       fItems.splice(ind,1);
+-      console.log('The length of fItems after splice = ' + fItems.length);
++      //console.log('The length of fItems after splice = ' + fItems.length);
+       
+ 
+       let tempOrd = this.orderModel();
+@@ -174,7 +166,7 @@ export class Order {
+       ind = tempOrd.items.length-1
+     }
+     if(func !='deleteItem' || tempOrd.items.length > 0){ 
+-      console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
++      //console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
+       let id= '#itemprc_'+ind;
+       if  (!(func == 'newItem' && tempOrd.items.length < 2)) {
+         

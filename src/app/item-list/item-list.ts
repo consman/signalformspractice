@@ -33,10 +33,9 @@ export class ItemList {
    return result;
   }
 
-  deleteItem(itemId:number):void{
-    console.log('The incoming item Id = ' + itemId); 
+  deleteItem(itemId:number):void{    
+    //console.log('The incoming item Id = ' + itemId); 
     this.onDelete.emit(itemId);
   }
-
 }
 

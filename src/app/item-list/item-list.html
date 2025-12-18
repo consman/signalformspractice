@@ -12,17 +12,11 @@
                 <td><input data-test="itemQty" id="itemqty_{{$index}}" [field]="item.qty" type="number"  class="form-control" /></td>                               
                 <td><input data-test="itemPrice" id="itemprc_{{$index}}"[field]="item.price" type="number" class="form-control" /></td>
                 <td class="deleteItem" > 
-                    <!--
-                    <button type="click"
-                        data-test="deleteItem" 
-                       id="deleteItem_{{$index}}" 
-                       [routerLink]="['/order','deleteItem'+item().value().itemId]">
-                       X
-                    </button>
-                    -->
+                    
                     <span type="button" data-test="deleteItem" 
                             id="deleteItem_{{$index}}"
                             (click)="deleteItem(item().value().itemId)"
+                            class="pointer"
                             >&#x1F5D1;
                     </span>    
 
@@ -53,10 +47,11 @@
         }        
         <tr><td></td><th>Total:</th><th data-test="itemListTotal">{{resultTot()| currency}}</th></tr>
     </table>
-   
+
 
 <!-- Use for debug:
   <div>itemForms.length = {{itemForms.length}}</div>
+  <div>itemForms[itemForms.length -1].description = {{items()[itemForms.length -1].description}}</div>
 -->
 
 

@@ -62,7 +62,7 @@
         
         @if(!done()){   
         <table><tr><td>
-          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button> 
+          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button>
           </td><td>
           <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
             Save

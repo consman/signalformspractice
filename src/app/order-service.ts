@@ -39,7 +39,7 @@ export class OrderService {
   updateOrder(order:Orderi):Observable<Orderi>{
 
     let result = false;
-    console.log('Going for update order and the numbr of items is: ' +order.items.length);
+    //console.log('Going for update order and the numbr of items is: ' +order.items.length);
     this.orders().forEach(ord => {
       if (ord.orderId == order.orderId){
         result = true;
