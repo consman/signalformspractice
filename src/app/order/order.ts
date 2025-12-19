@@ -124,7 +124,7 @@ export class Order {
     let itemsLength = this.orderForm.items().value().length;
     let newItem =getNewItem(itemsLength + 1);
     this.orderModel().items.push(newItem);
-   this.reRenderItems('newItem');
+    //this.reRenderItems('newItem');
   }   
 
   deleteItem(itemId:number):void{
