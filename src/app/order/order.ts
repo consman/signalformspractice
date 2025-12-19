@@ -86,7 +86,6 @@ export class Order {
   onSubmit(event: Event): void{
     event.preventDefault();
     if (event.type == 'submit'){
-      //this.orderModel().items.splice(3,1);
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
         let updateResult = this.orderService.updateOrder(orderM);
@@ -99,12 +98,10 @@ export class Order {
           this.result.set('Order not updated. Something went wrong. Please check the remote service.');
         }
       });
-      //console.log('Save after delete item H');
     }
     else{
       console.log('The event type = ' +event.type);
     }
-    //console.log('Save after delete item I');
   }
 
 
@@ -140,48 +137,12 @@ export class Order {
     });
     if(target){
       let ind = fItems.findIndex((i:Item) =>{return target?.itemId == i.itemId} );
-      //console.log('The index in deleteItem = ' + ind);
-
       fItems.splice(ind,1);
-      //console.log('The length of fItems after splice = ' + fItems.length);
-
-
-      let tempOrd = this.orderModel();
-      let newOrd = this.getNewOrderFromOldOrder(tempOrd);
-      newOrd.items = fItems;
-      this.ordSig$.set(this.orderService.updateOrder(newOrd).pipe(tap(o=>{
-        this.orderModel.set(o);
-      })) );
+      this.orderModel.update(order => {
+        order.items = [...fItems];
+        return {...order}
+      });
     }
-    this.reRenderItems('deleteItem');
-  }
-
-
-  reRenderItems(func:string): void {
-
-    //TODO Fix this hack! IT simulates the user clicking on some of the existing field so that the
-    let tempOrd = this.orderModel();
-
-    //let newLength = tempOrd.items.length > 1 ? tempOrd.items.length : 1;
-    let ind = 0;
-    if (func =='deleteItem'){
-      ind = tempOrd.items.length-1
-    }
-    if(func !='deleteItem' || tempOrd.items.length > 0){
-      //console.log('func= ' + func + ' tempOrd.items.length = ' + tempOrd.items.length);
-      let id= '#itemprc_'+ind;
-      if  (!(func == 'newItem' && tempOrd.items.length < 2)) {
-
-        this.renderer.selectRootElement(id).focus();
-        id= '#itemqty_'+ind;
-        this.renderer.selectRootElement(id).focus();
-      }
-        setTimeout(() =>{
-          id= '#itemdesc_'+ind;
-          this.renderer.selectRootElement(id).focus();
-        }, 100); // app runs fine with only 1 ms delay, but need to bump to 7 at least for Unit tests to pass
-    }
-
   }
 
     consOrderModelItems(): void {

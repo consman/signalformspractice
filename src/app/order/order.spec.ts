@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-//import { routes } from '../app.routes';
 import { ActivatedRoute } from '@angular/router';
 
 export const FAKE_ROUTE = {

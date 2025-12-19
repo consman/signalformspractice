@@ -4,7 +4,7 @@ describe("Test the Signal forms Practice App", () => {
   });
 
   it("Shows the title on the home page.",()=>{
-    cy.title().should("eq","Signalformspractice");
+    cy.title().should("eq","Signal Forms Practice");
   });
 
   it("Shows the customerName on the 4th in the order list.",()=>{
@@ -90,8 +90,8 @@ it("Provides edit validation for the fields on the Item List section of the Orde
 it("Adds a new item",()=>{
   cy.get("[data-test='customerName']").eq(0).click();
   cy.get("[data-test='addNewItemButton']").click();
-  cy.get("[data-test='itemQty']").eq(2).click();
-  cy.get("[data-test='itemDesc']").eq(2).click();
+  //cy.get("[data-test='itemQty']").eq(2).click();
+  //cy.get("[data-test='itemDesc']").eq(2).click();
   cy.get("[data-test='itemDesc']").eq(4).clear()
   cy.get("[data-test='itemDesc']").eq(4).type('Michael\'s 5th item');
   cy.get("[data-test='itemQty']").eq(4).clear().type('3');
@@ -142,7 +142,7 @@ it("deletes an item from the item list gracefully using Output and emitters",()=
   cy.get("[data-test='backToListButton']").click();
   cy.get("[data-test='listOrderTotal']").eq(1).should("include.text", '$355.00'); 
 });
-  
+
 })
 
 export function getDateStringForCypress(target:Date):string{
