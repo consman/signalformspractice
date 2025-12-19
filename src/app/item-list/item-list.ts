@@ -12,11 +12,14 @@ export class ItemList {
 
   items = input.required<FieldTree<Item[]>>();
   resultTot = computed<number> ( () => this.getTotal());
+  unitTestInProgress: boolean = false;
+  deletionCompletion: boolean = false;
 
   @Output()
   onDelete = new EventEmitter<number>();
 
-  constructor(){}
+  constructor(){
+  }
   
   getTotal(): number{
    const itemForms = this.items();
@@ -27,15 +30,17 @@ export class ItemList {
     });
    }
    else{
-    console.log('getTotal says must be unit testing - itemForms is not a function. '); 
-    console.log(' itemForms.length = '+ itemForms.length);
+    if (!this.unitTestInProgress){
+      console.warn('getTotal says itemForms is not a function. This seems wrong.'); 
+      console.warn(' itemForms.length = '+ itemForms.length);
+    }
    }
    return result;
   }
 
   deleteItem(itemId:number):void{    
-    //console.log('The incoming item Id = ' + itemId); 
     this.onDelete.emit(itemId);
+    this.deletionCompletion = true;
   }
 }
 

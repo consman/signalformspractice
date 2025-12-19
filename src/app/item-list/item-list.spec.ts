@@ -25,6 +25,7 @@ describe('ItemList', () => {
       }
     );
     component = fixture.componentInstance;
+    component.unitTestInProgress = true;
     await fixture.whenStable();
   });
 
@@ -35,5 +36,10 @@ describe('ItemList', () => {
   it('should determine the number of items is zero', () => {
     expect(component.items().length).toEqual(0);
   });
+
+   it('should delete an item', () => {
+    component.deleteItem(3);
+    expect(component.deletionCompletion).toBeTruthy();
+  }); 
 
 });
