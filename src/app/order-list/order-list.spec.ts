@@ -3,6 +3,8 @@ import { routes } from '../app.routes';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { OrderList } from './order-list';
 import { Orderi } from '../order/Orderi';
+import { NonProdOrderService } from '../non-prod-order-service';
+import { AbsOrderService } from '../abs-order-service';
 
 export const FAKE_ROUTE = {
   snapshot: { paramMap: {get: () => 'orders'}}
@@ -18,11 +20,14 @@ export const FAKEORDER: Orderi =
 describe('OrderList', () => {
   let component: OrderList;
   let fixture: ComponentFixture<OrderList>;
+  let nonProdOrderService = new NonProdOrderService();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrderList],
-      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},provideRouter(routes)]
+      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},
+        provideRouter(routes),
+        {provide:AbsOrderService, useValue:nonProdOrderService}]
     })
     .compileComponents();
 

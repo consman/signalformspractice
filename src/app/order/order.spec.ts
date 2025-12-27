@@ -6,15 +6,19 @@ export const FAKE_ROUTE = {
 };
 
 import { Order } from './order';
+import { NonProdOrderService } from '../non-prod-order-service';
+import { AbsOrderService } from '../abs-order-service';
 
 describe('Order', () => {
   let component: Order;
   let fixture: ComponentFixture<Order>;
+    let nonProdOrderService = new NonProdOrderService();
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [Order],
-      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE}]
+      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},
+      {provide:AbsOrderService, useValue:nonProdOrderService}]  
     })
     .compileComponents();
 

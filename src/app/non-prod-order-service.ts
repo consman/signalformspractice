@@ -1,19 +1,22 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable, of, tap } from 'rxjs';
 import { getNewOrder, Orderi } from './order/Orderi';
 import { ORDERS } from './mockData';
+import { AbsOrderService } from './abs-order-service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
-export class OrderService {
+export class NonProdOrderService extends AbsOrderService {
 
-  ordersSig$: WritableSignal<Observable<Orderi[]>> = signal( of(ORDERS));
-  orders: WritableSignal<Orderi[]>= signal(ORDERS);
+  ordersSig$: WritableSignal<Observable<Orderi[]>> = signal( of([]));
+  orders: WritableSignal<Orderi[]>= signal([]);
   nextOrderId=0;
-  newOrderSig: WritableSignal<Orderi>= signal(getNewOrder());
 
   constructor(){
+    super();
+    console.log('NonProdOrderService says producion = ' + environment.production);
     this.orders.set(ORDERS);
     this.orders().forEach(o => {
       if(o.orderId && o.orderId >= this.nextOrderId){
@@ -23,23 +26,27 @@ export class OrderService {
   }
 
 
-  getAllOrders(): Observable<Orderi[]>{
+  override getAllOrders(): Observable<Orderi[]>{
     //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')    
-    let result =  of (this.orders());
+    let result =  of (this.orders()).pipe(tap(ords => {
+          ords.forEach(ord => {
+            console.log('Order id '+ ord.orderId + ' has an approval date of ' + ord.csrApprovalDate);
+          });
+        }));
     this.ordersSig$.set(result);
     return result;
   }
 
-  getOrderByOrderId(orderId:number): Observable<Orderi>{
+    override getOrderByOrderId(orderId:number): Observable<Orderi>{
     //return this.http.get <Order> ('https://bobsAwesomeBackEndOrderServer.com/order/orderId')    
     let result = from(ORDERS.filter(ord => ord.orderId == orderId));
     return result;
   }
 
-  updateOrder(order:Orderi):Observable<Orderi>{
+    override updateOrder(order:Orderi):Observable<Boolean>{
 
-    let result = false;
-    //console.log('Going for update order and the numbr of items is: ' +order.items.length);
+    let result = false;    
+    console.log('NonPROD -- Attempting to update order ' + order.orderId);
     this.orders().forEach(ord => {
       if (ord.orderId == order.orderId){
         result = true;
@@ -57,16 +64,16 @@ export class OrderService {
     else{
       console.warn('OrderService(update) could not find order ' + order.orderId );
     }
-    return of(order); 
+    return of(result); 
   }
 
-  addNewOrder():Observable<Orderi>{
-    this.newOrderSig.set(getNewOrder());
-    this.newOrderSig().orderId = this.nextOrderId++;
-    this.orders().push(this.newOrderSig());
+  override addNewOrder():Observable<Orderi>{
+    let newOrderSig: WritableSignal<Orderi>= signal(getNewOrder());
+    newOrderSig().orderId = this.nextOrderId++;
+    this.orders().push(newOrderSig());
     let obsOrds =  of (this.orders());
     this.ordersSig$.set(obsOrds);
-    return of(this.newOrderSig());
+    return of(newOrderSig());
   }
 
 }

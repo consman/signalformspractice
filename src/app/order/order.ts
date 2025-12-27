@@ -1,13 +1,13 @@
 import { Component, inject, Renderer2, signal, WritableSignal } from '@angular/core';
-import { Orderi , initialOrder, orderSchema} from './Orderi';
+import { Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { OrderService } from '../order-service';
 import { Observable , of, tap} from 'rxjs';
 
 import { Field, form, submit } from '@angular/forms/signals';
 import { AsyncPipe , DatePipe} from '@angular/common'; //, JsonPipe
 import { ItemList } from '../item-list/item-list';
 import { Item } from '../item-list/itemList';
+import { AbsOrderService } from '../abs-order-service';
 
 @Component({
   selector: 'app-order',
@@ -18,7 +18,7 @@ import { Item } from '../item-list/itemList';
 
 export class Order {
 
-  orderService = inject(OrderService);
+  orderService = inject(AbsOrderService);
   now = new Date();
   today = getBasicDateString(this.now);
   startOfToday: Date = new Date(this.today);
@@ -28,6 +28,7 @@ export class Order {
 
   result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
+  savedOrdStatus$: Observable<Boolean> = of(false); 
 
   orderModel = signal<Orderi>(initialOrder);
   orderForm = form(this.orderModel, orderSchema);
@@ -36,14 +37,13 @@ export class Order {
 
   constructor(route: ActivatedRoute, _router: Router,private renderer: Renderer2){
 
-
     this.orderId.set(0);
     let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
     //console.log('orderIdOrFunc = ' + orderIdOrFunc);
     let tempNewOrderId: number | undefined  = 0;
     if(orderIdOrFunc == 'add'){
 
-      this.ordSig$.set( this.orderService.addNewOrder().pipe(tap(o=> {
+      this.ordSig$.set( this.orderService.addNewOrder(getNewOrder()).pipe(tap(o=> {
 
         tempNewOrderId = o.orderId;
         if(o.orderId) {
@@ -62,6 +62,7 @@ export class Order {
           this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
             this.orderModel.set(o);
             this.updateOrderTotal(o);
+            //console.log('o.csrApprovalDate.getTime() = '+o.csrApprovalDate.getTime());
           })));
         }
         else{
@@ -83,27 +84,26 @@ export class Order {
     this.orderTotal.set(temp);
   }
 
+  
   onSubmit(event: Event): void{
     event.preventDefault();
     if (event.type == 'submit'){
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
-        let updateResult = this.orderService.updateOrder(orderM);
-
-        if (updateResult){ //TODO this is really an observable of an order - not a boolean
-          this.result.set('Success!');
+        this.result.set('Order not updated. Something went wrong. Please check the remote service.');
+        this.savedOrdStatus$ = this.orderService.updateOrder(orderM).pipe(tap(bool=>{
+          console.log('Going for update order ');
+          if (bool) {
+            this.result.set('Success!');
+          }          
           this.done.set(true);
-        }
-        else {
-          this.result.set('Order not updated. Something went wrong. Please check the remote service.');
-        }
+        }));        
       });
     }
     else{
       console.log('The event type = ' +event.type);
     }
   }
-
 
   getNewOrderFromOldOrder(old:Orderi):Orderi{
     return {
@@ -152,6 +152,7 @@ export class Order {
       this.orderForm().value().items.forEach(i =>{
         console.log('F item id = ' + i.itemId + ' items desc = ' +i.description);
       });
+      console.log('F this.orderForm().value().csrApprovalDate.getTime() = ' + this.orderForm().value().csrApprovalDate.getTime());
   }
 
 }

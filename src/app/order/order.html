@@ -62,16 +62,21 @@
         
         @if(!done()){   
         <table><tr><td>
-          <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button>
-          </td><td>
-          <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
+            <button data-test="addNewItemButton" type="button" (click)="addNewItem()">New Item</button>
+          </td>
+          <td>
+            <button data-test="saveOrderButton" type="submit" [disabled]="orderForm().invalid() || approvedWithFutureDate " class="btn btn-default ml3">
             Save
-        </button>
-        </td></tr></table>
+            </button>
+        </td> </tr></table>
         }
-        <p class="resultClass">{{result()}}</p>
+         @let sos = savedOrdStatus$ | async;
+         @if (done()){
+           <p class="resultClass">{{result()}}</p>
+         }
     </form>
-
+    <button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button><br/>
+   
     <!-- Use for debug:
         <div>ord.items.length = {{ord.items.length}}</div>
 
@@ -88,9 +93,10 @@
         
 }
 
-<button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button>
-
 <!-- Use for debug:
+ <button type="button" (click)="consOrderModelItems()">
+            ConsItems
+        </button>
 <div>this.orderForm().value() = {{this.orderForm().value() | json }}</div>
 -->
 

@@ -2,8 +2,8 @@ import { Component, signal, inject,  WritableSignal} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { Orderi } from '../order/Orderi';
-import { OrderService } from '../order-service';
 import { AsyncPipe, DatePipe, CurrencyPipe} from '@angular/common';
+import { AbsOrderService } from '../abs-order-service';
 
 @Component({
   selector: 'app-order-list',
@@ -13,7 +13,7 @@ import { AsyncPipe, DatePipe, CurrencyPipe} from '@angular/common';
 })
 export class OrderList {
 
-  orderService = inject(OrderService); 
+  orderService = inject(AbsOrderService); 
   orders$: Observable<Orderi[]>; 
   orderTotalsMap: Map <number,number> = new Map();
   orderTotalsMapSig: WritableSignal<Map<number,number>> = signal(this.orderTotalsMap); 
