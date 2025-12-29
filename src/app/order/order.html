@@ -70,33 +70,11 @@
             </button>
         </td> </tr></table>
         }
-         @let sos = savedOrdStatus$ | async;
+         
          @if (done()){
            <p class="resultClass">{{result()}}</p>
          }
     </form>
     <button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button><br/>
-   
-    <!-- Use for debug:
-        <div>ord.items.length = {{ord.items.length}}</div>
-
-
-        <td>
-          <button type="button" (click)="consOrderModelItems()">
-            ConsItems
-        </button>
-        </td>
-
-            <span>csrApprovalDate: {{orderModel().csrApprovalDate.getTime()}}</span><br>
-            <span>nowB: {{startOfToday.getTime()}}</span>  
-    -->
-        
+           
 }
-
-<!-- Use for debug:
- <button type="button" (click)="consOrderModelItems()">
-            ConsItems
-        </button>
-<div>this.orderForm().value() = {{this.orderForm().value() | json }}</div>
--->
-

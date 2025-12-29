@@ -1,7 +1,7 @@
 import { Component, inject, Renderer2, signal, WritableSignal } from '@angular/core';
 import { Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Observable , of, tap} from 'rxjs';
+import { Observable, tap} from 'rxjs';
 
 import { Field, form, submit } from '@angular/forms/signals';
 import { AsyncPipe , DatePipe} from '@angular/common'; //, JsonPipe
@@ -28,7 +28,6 @@ export class Order {
 
   result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
-  savedOrdStatus$: Observable<Boolean> = of(false); 
 
   orderModel = signal<Orderi>(initialOrder);
   orderForm = form(this.orderModel, orderSchema);
@@ -39,7 +38,6 @@ export class Order {
 
     this.orderId.set(0);
     let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
-    //console.log('orderIdOrFunc = ' + orderIdOrFunc);
     let tempNewOrderId: number | undefined  = 0;
     if(orderIdOrFunc == 'add'){
 
@@ -55,14 +53,12 @@ export class Order {
     }
     else{ //here we are just retrieving an existing order
       if(orderIdOrFunc){
-        //console.log('Going for orderIdOrFunc '+ orderIdOrFunc);
         let myInt = parseInt(orderIdOrFunc);
         if(myInt){
           this.orderId.set(myInt);
           this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
             this.orderModel.set(o);
             this.updateOrderTotal(o);
-            //console.log('o.csrApprovalDate.getTime() = '+o.csrApprovalDate.getTime());
           })));
         }
         else{
@@ -84,25 +80,17 @@ export class Order {
     this.orderTotal.set(temp);
   }
 
-  
   onSubmit(event: Event): void{
     event.preventDefault();
     if (event.type == 'submit'){
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
-        this.result.set('Order not updated. Something went wrong. Please check the remote service.');
-        this.savedOrdStatus$ = this.orderService.updateOrder(orderM).pipe(tap(bool=>{
-          console.log('Going for update order ');
-          if (bool) {
-            this.result.set('Success!');
-          }          
-          this.done.set(true);
-        }));        
+        this.result.set(this.orderService.updateOrderR(orderM) ? 
+          'Success!' : 
+          'Order not updated. Something went wrong. Please check the remote service.');
+        this.done.set(true);
       });
-    }
-    else{
-      console.log('The event type = ' +event.type);
-    }
+    }    
   }
 
   getNewOrderFromOldOrder(old:Orderi):Orderi{
@@ -127,7 +115,6 @@ export class Order {
   }
 
   deleteItem(itemId:number):void{
-    //console.log('Deleting itemId = ' +itemId);
     let fItems = this.orderForm.items().value();
     let target: Item | undefined;
     fItems.forEach(i=>{
@@ -144,17 +131,6 @@ export class Order {
       });
     }
   }
-
-    consOrderModelItems(): void {
-      this.orderModel().items.forEach(i =>{
-        console.log('M item id = ' + i.itemId + ' items desc = ' +i.description);
-      });
-      this.orderForm().value().items.forEach(i =>{
-        console.log('F item id = ' + i.itemId + ' items desc = ' +i.description);
-      });
-      console.log('F this.orderForm().value().csrApprovalDate.getTime() = ' + this.orderForm().value().csrApprovalDate.getTime());
-  }
-
 }
 
 export function getBasicDateString(d:Date): string{
