@@ -10,6 +10,11 @@ export interface Orderi {
     items: Item[];
 }
 
+export interface ChangeOrderResponse {
+  orderId : number | undefined;
+  result: boolean;
+}
+
 export const beginningOfTime: Date  = new Date(0);
 export const now: Date  = new Date();
 

@@ -4,7 +4,7 @@
   <div class="orda">
 
   <h3>ORDERS:</h3>
-    @let ords = orders$ | async;
+    @let ords = ordersSig();
 
     @if(ords && ords.length > 0){
       
@@ -22,6 +22,7 @@
           </td></tr>
       }
       </table>
+      
     }
     <button data-test="addNewOrderButton" [routerLink]="['/order','add']">Add New Order</button>    
     

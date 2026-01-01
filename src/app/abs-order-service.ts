@@ -1,7 +1,7 @@
 import { Injectable, WritableSignal } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
-import { Orderi } from './order/Orderi';
+import { ChangeOrderResponse, Orderi } from './order/Orderi';
 
 @Injectable({
   providedIn: 'root',
@@ -13,10 +13,10 @@ export abstract class AbsOrderService {
     console.log('Abstract service, AbsOrderService, says producion = ' + environment.production);
   }
 
-  abstract getAllOrders(): Observable<Orderi[]>;
+  abstract getAllOrders(): WritableSignal<Orderi[] | undefined>;
   abstract getOrderByOrderId(orderId:number): Observable<Orderi>;
   abstract addNewOrder(order:Orderi):Observable<Orderi>;
-  abstract updateOrderR (order:Orderi): WritableSignal<Boolean | undefined>;
+  abstract updateOrderR (order:Orderi): WritableSignal<ChangeOrderResponse | undefined>;
 
 
 

@@ -1,6 +1,6 @@
 import { Injectable, signal, WritableSignal } from '@angular/core';
 import { from, Observable, of, tap } from 'rxjs';
-import { getNewOrder, Orderi } from './order/Orderi';
+import { ChangeOrderResponse, getNewOrder, Orderi } from './order/Orderi';
 import { ORDERS } from './mockData';
 import { AbsOrderService } from './abs-order-service';
 import { environment } from '../environments/environment';
@@ -26,11 +26,11 @@ export class NonProdOrderService extends AbsOrderService {
   }
 
 
-  override getAllOrders(): Observable<Orderi[]>{
+  override getAllOrders(): WritableSignal<Orderi[]>{
     //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')    
     let result =  of (this.orders());
     this.ordersSig$.set(result);
-    return result;
+    return signal(this.orders());//result;
   }
 
     override getOrderByOrderId(orderId:number): Observable<Orderi>{
@@ -39,27 +39,31 @@ export class NonProdOrderService extends AbsOrderService {
     return result;
   }
 
-    override updateOrderR(order: Orderi):WritableSignal<Boolean| undefined> {
-    let result: WritableSignal<Boolean | undefined> = signal(false);    
+    override updateOrderR(order: Orderi):WritableSignal<ChangeOrderResponse| undefined> {
+    let cor:ChangeOrderResponse = {orderId:0,result:false};
+    let corSig: WritableSignal<ChangeOrderResponse | undefined> = signal(cor);   
     
     this.orders().forEach(ord => {
       if (ord.orderId == order.orderId){
-        result.set(true);
+        cor.result = true; 
+        cor.orderId = ord.orderId;
+         
         ord.csrApprovalDate = order.csrApprovalDate;
         ord.customerName = order.customerName;
         ord.items = order.items;
-
         ord.orderStatus = order.orderStatus;
       }
     });
-    if (result()){
+    if (cor.result){
+      corSig = signal(cor);  
       let obsOrds =  of (this.orders());
       this.ordersSig$.set(obsOrds);
     }
     else{
       console.warn('OrderService(update) could not find order ' + order.orderId );
     }
-    return result; 
+    
+    return corSig; 
     } //TODO implement this
 
 

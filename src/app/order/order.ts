@@ -1,5 +1,5 @@
-import { Component, inject, Renderer2, signal, WritableSignal } from '@angular/core';
-import { Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
+import { Component, inject, Renderer2, signal, WritableSignal, effect } from '@angular/core';
+import { ChangeOrderResponse, Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Observable, tap} from 'rxjs';
 
@@ -26,13 +26,15 @@ export class Order {
   ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
 
-  result: WritableSignal<string> = signal('');
+  result: WritableSignal<string> = signal('Order not updated. Something went wrong. Please check the remote service.');
   done: WritableSignal<boolean> = signal(false);
 
   orderModel = signal<Orderi>(initialOrder);
   orderForm = form(this.orderModel, orderSchema);
 
   orderTotal: WritableSignal<number> = signal(0);
+  temp:Boolean | undefined = false;    
+  corSig: WritableSignal<ChangeOrderResponse | undefined> = signal(undefined);   
 
   constructor(route: ActivatedRoute, _router: Router,private renderer: Renderer2){
 
@@ -59,7 +61,7 @@ export class Order {
           this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
             this.orderModel.set(o);
             this.updateOrderTotal(o);
-          })));
+          })));          
         }
         else{
           console.warn('Cannot parse an Int from the of ' + orderIdOrFunc);
@@ -69,6 +71,13 @@ export class Order {
         console.warn('Param is not orderId, but rather '+ orderIdOrFunc);
       }
     }
+
+    effect(() => {
+        if(this.done() && this.corSig && this.corSig()?.result) {
+          console.log('Going for effect() .... this.corSig()?.result = ' + this.corSig()?.result )
+          this.result.set('Success!');
+        }
+    });
   }
 
   updateOrderTotal(o:Orderi):void{
@@ -85,10 +94,9 @@ export class Order {
     if (event.type == 'submit'){
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
-        this.result.set(this.orderService.updateOrderR(orderM) ? 
-          'Success!' : 
-          'Order not updated. Something went wrong. Please check the remote service.');
+        this.corSig = this.orderService.updateOrderR(orderM);
         this.done.set(true);
+        console.log(' efffect() should run here.');
       });
     }    
   }
