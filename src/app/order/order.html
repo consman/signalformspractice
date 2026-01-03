@@ -70,24 +70,11 @@
             </button>
         </td> </tr></table>
         }
-        @if (done()) {
-            <p class="resultClass">{{result()}}</p>
-        }
-        <span> corSig()?.result =  {{corSig()?.result}}</span>
-        <!--
-         @if (done()) {
-            @if ( corSig()?.result){
-                <p class="resultClass">Success!</p>
-            }
-            @if (!corSig()?.result){
-                <p class="resultClass">Order not updated. Something went wrong. Please check the remote service.</p>
-            }
-        }   -->
          
-            
-         
+         @if (done()){
+           <p class="resultClass">{{result()}}</p>
+         }
     </form>
-    
     <button data-test="backToListButton" [routerLink]="['/orders']" class="btn btn-default ml3">Back To List</button><br/>
            
 }
