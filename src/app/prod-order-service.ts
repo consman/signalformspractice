@@ -14,15 +14,17 @@ export class ProdOrderService extends AbsOrderService {
   serverPort = '9324';
 
   // prepare for getOrderByOrderId:
-  targetOrderId = signal (999);
-  private getOrderResource = httpResource<Orderi>( () =>this.server+':'+this.serverPort+'/order/'+this.targetOrderId());
+  dummyA = signal(0);
+  targetOrderId = signal (0);
+  private getOrderResource = httpResource<Orderi>( () =>this.server+':'+this.serverPort+'/order/'+this.targetOrderId()+'?dummy='+this.dummyA());
   order = computed(() => this.getOrderResource.value);
+  //TODO find out why this is being inexplicibly called on app start up 
 
   // prepare for getAllOrders:
-  dummy = signal(73923234234);
+  dummyB = signal(0);
   allOrdersResource = httpResource<Orderi[]>(() =>{
     const request: HttpResourceRequest ={
-      url : this.server+':'+this.serverPort+'/orders?'+this.dummy(),
+      url : this.server+':'+this.serverPort+'/orders?dummy='+this.dummyB(), //TODO find why we need to add this dummy param to make it run more than once
       method: 'GET'
     };
     return request;
@@ -47,7 +49,7 @@ export class ProdOrderService extends AbsOrderService {
     if(!this.targetOrderForAddSig()) return undefined;  
     const request: HttpResourceRequest = {
       url: this.server+':'+this.serverPort+'/newOrder',
-      method: 'PUT',
+      method: 'POST',
       body: this.targetOrderForAddSig() 
     };
     return request;
@@ -70,18 +72,18 @@ export class ProdOrderService extends AbsOrderService {
 
   override getOrderByOrderId(orderId: number): WritableSignal<Orderi | undefined> {
     //console.log('Prod service - getOrderByOrderId - for Id = ' + orderId);
+    this.dummyA.set(new Date().getTime());
+    let result: WritableSignal<Orderi | undefined> = signal(undefined);
     if (orderId > 0){
       this.targetOrderId.set(orderId);
+      result = this.getOrderResource.value;
     }
-    let result = this.getOrderResource.value ;
-    const aDate = result()?.csrApprovalDate; 
-    const ord = result();
     return result;
   }
     
   override getAllOrders(): WritableSignal<Orderi[] | undefined> {
     //console.log('Prod getAllOrders() ... ');
-    this.dummy.set(new Date().getTime());
+    this.dummyB.set(new Date().getTime());
     let result = this.allOrdersResource.value;
     //console.log('Prod getAllOrders() .. this.orders()()?.length= ' + result()?.length);
     return result;
