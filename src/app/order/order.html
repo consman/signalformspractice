@@ -1,4 +1,4 @@
-@let ord = ordSig$() | async;
+@let ord = ordSig();
 @if ( ord ) {
     
     <form (submit)="onSubmit($event)">
@@ -73,7 +73,6 @@
         @if (done()) {
             <p class="resultClass">{{result()}}</p>
         }
-        <span> corSig()?.result =  {{corSig()?.result}}</span>
         <!--
          @if (done()) {
             @if ( corSig()?.result){
@@ -82,7 +81,9 @@
             @if (!corSig()?.result){
                 <p class="resultClass">Order not updated. Something went wrong. Please check the remote service.</p>
             }
-        }   -->
+        }  
+        <span> corSig()?.result =  {{corSig()?.result}}</span>
+         -->
          
             
          

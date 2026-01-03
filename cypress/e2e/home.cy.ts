@@ -16,6 +16,7 @@ describe("Test the Signal forms Practice App", () => {
   });
 
   it("Navigates to the Add Order Page",()=>{
+    
     cy.get("[data-test='addNewOrderButton']").click();    
     cy.get("[data-test='customerNameInput']").should("have.value", 'Customer Name Here');
   });
@@ -89,6 +90,7 @@ it("Provides edit validation for the fields on the Item List section of the Orde
 
 it("Adds a new item",()=>{
   cy.get("[data-test='customerName']").eq(0).click();
+  cy.wait(1000);
   cy.get("[data-test='addNewItemButton']").click();
   //cy.get("[data-test='itemQty']").eq(2).click();
   //cy.get("[data-test='itemDesc']").eq(2).click();

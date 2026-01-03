@@ -1,17 +1,16 @@
-import { Component, inject, Renderer2, signal, WritableSignal, effect } from '@angular/core';
+import { Component, inject, signal, WritableSignal, effect } from '@angular/core';
 import { ChangeOrderResponse, Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Observable, tap} from 'rxjs';
 
 import { Field, form, submit } from '@angular/forms/signals';
-import { AsyncPipe , DatePipe} from '@angular/common'; //, JsonPipe
+import { DatePipe} from '@angular/common'; //, JsonPipe
 import { ItemList } from '../item-list/item-list';
 import { Item } from '../item-list/itemList';
 import { AbsOrderService } from '../abs-order-service';
 
 @Component({
   selector: 'app-order',
-  imports: [RouterLink, Field, AsyncPipe, DatePipe, ItemList], //, JsonPipe
+  imports: [RouterLink, Field, DatePipe, ItemList], //, JsonPipe
   templateUrl: './order.html',
   styleUrl: '../app.css',
 })
@@ -23,7 +22,7 @@ export class Order {
   today = getBasicDateString(this.now);
   startOfToday: Date = new Date(this.today);
 
-  ordSig$: WritableSignal<Observable<Orderi>| undefined> =signal(undefined);
+  ordSig: WritableSignal<Orderi| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
 
   result: WritableSignal<string> = signal('Order not updated. Something went wrong. Please check the remote service.');
@@ -35,33 +34,25 @@ export class Order {
   orderTotal: WritableSignal<number> = signal(0);
   temp:Boolean | undefined = false;    
   corSig: WritableSignal<ChangeOrderResponse | undefined> = signal(undefined);   
+  //newOrd: Orderi = initialOrder;
 
-  constructor(route: ActivatedRoute, _router: Router,private renderer: Renderer2){
+  constructor(route: ActivatedRoute, _router: Router){
 
     this.orderId.set(0);
     let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
     let tempNewOrderId: number | undefined  = 0;
     if(orderIdOrFunc == 'add'){
-
-      this.ordSig$.set( this.orderService.addNewOrder(getNewOrder()).pipe(tap(o=> {
-
-        tempNewOrderId = o.orderId;
-        if(o.orderId) {
-          this.orderId.set(o.orderId);
-        }
-        this.orderModel.set(o);
-        this.updateOrderTotal(o);
-        })));
+      //this.newOrd = getNewOrder();
+      this.ordSig =this.orderService.addNewOrder(); 
     }
     else{ //here we are just retrieving an existing order
       if(orderIdOrFunc){
         let myInt = parseInt(orderIdOrFunc);
         if(myInt){
           this.orderId.set(myInt);
-          this.ordSig$.set(this.orderService.getOrderByOrderId(this.orderId()).pipe(tap(o => {
-            this.orderModel.set(o);
-            this.updateOrderTotal(o);
-          })));          
+          //console.log(' in order.ts and orderIdOrFunc = ' + orderIdOrFunc);
+          this.ordSig = this.orderService.getOrderByOrderId(this.orderId());
+          const ordFromServer = this.ordSig();
         }
         else{
           console.warn('Cannot parse an Int from the of ' + orderIdOrFunc);
@@ -71,22 +62,42 @@ export class Order {
         console.warn('Param is not orderId, but rather '+ orderIdOrFunc);
       }
     }
-
+    
     effect(() => {
         if(this.done() && this.corSig && this.corSig()?.result) {
-          console.log('Going for effect() .... this.corSig()?.result = ' + this.corSig()?.result )
+          //console.log('eff 1 .... this.corSig()?.result = ' + this.corSig()?.result )
           this.result.set('Success!');
         }
     });
+
+    effect(() =>{
+      //this.ordSig;   
+      const ordFromServer = this.ordSig();           
+      if(ordFromServer) {
+        //console.log('eff 2 - OrderServer changed and ordFromServer.createDate = ' + ordFromServer.createDate);
+        ordFromServer.csrApprovalDate = new Date(ordFromServer.csrApprovalDate);
+        const orderSigOrderId = ordFromServer.orderId; // ordFromServer?.orderId;
+        if (orderSigOrderId && orderSigOrderId > 0){
+          this.orderId.set(orderSigOrderId);
+          this.orderModel.set(ordFromServer);
+          this.updateOrderTotal(ordFromServer);
+        }
+        else{
+          //console.log('eff 2 - OrderId is not > 0 but rather '+ orderSigOrderId);
+        }
+      }
+    });
   }
 
-  updateOrderTotal(o:Orderi):void{
+  updateOrderTotal(o:Orderi | undefined ):void{
     let temp = 0;
-    o.items.forEach(i=>{
-       //this.orderTotal() ;
-      temp = temp + (i.price * i.qty);
-    });
-    this.orderTotal.set(temp);
+    if(o){
+      o.items.forEach(i=>{
+        //this.orderTotal() ;
+        temp = temp + (i.price * i.qty);
+      });
+      this.orderTotal.set(temp);
+    }
   }
 
   onSubmit(event: Event): void{
@@ -94,9 +105,9 @@ export class Order {
     if (event.type == 'submit'){
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
-        this.corSig = this.orderService.updateOrderR(orderM);
+        this.corSig = this.orderService.updateOrder(orderM);
         this.done.set(true);
-        console.log(' efffect() should run here.');
+        //console.log(' efffect() should run here.');
       });
     }    
   }

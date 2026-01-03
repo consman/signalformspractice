@@ -1,8 +1,7 @@
 import { Component, signal, inject,  WritableSignal, effect} from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Observable, tap } from 'rxjs';
 import { Orderi } from '../order/Orderi';
-import { AsyncPipe, DatePipe, CurrencyPipe} from '@angular/common';
+import { DatePipe, CurrencyPipe} from '@angular/common';
 import { AbsOrderService } from '../abs-order-service';
 
 @Component({
@@ -19,7 +18,7 @@ export class OrderList {
   orderTotalsMapSig: WritableSignal<Map<number,number>> = signal(this.orderTotalsMap); 
   
   constructor(){
-    console.log('Order List constructor running.....')
+    //console.log('Order List constructor running.....')
 
     this.ordersSig = this.orderService.getAllOrders();
 
