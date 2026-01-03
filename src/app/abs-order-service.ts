@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { Observable } from 'rxjs';
 import { Orderi } from './order/Orderi';
@@ -15,8 +15,8 @@ export abstract class AbsOrderService {
 
   abstract getAllOrders(): Observable<Orderi[]>;
   abstract getOrderByOrderId(orderId:number): Observable<Orderi>;
+  abstract updateOrder(order:Orderi):Observable<Boolean>;
   abstract addNewOrder(order:Orderi):Observable<Orderi>;
-  abstract updateOrderR (order:Orderi): WritableSignal<Boolean | undefined>;
 
 
 

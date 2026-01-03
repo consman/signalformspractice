@@ -35,6 +35,7 @@ export class ItemList {
       console.warn(' itemForms.length = '+ itemForms.length);
     }
    }
+   //console.log('func getTotal running. result = ' + result);
    return result;
   }
 

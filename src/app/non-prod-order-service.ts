@@ -28,7 +28,11 @@ export class NonProdOrderService extends AbsOrderService {
 
   override getAllOrders(): Observable<Orderi[]>{
     //return this.http.get <Order[]> ('https://bobsAwesomeBackEndOrderServer.com/orders')    
-    let result =  of (this.orders());
+    let result =  of (this.orders()).pipe(tap(ords => {
+          ords.forEach(ord => {
+            console.log('Order id '+ ord.orderId + ' has an approval date of ' + ord.csrApprovalDate);
+          });
+        }));
     this.ordersSig$.set(result);
     return result;
   }
@@ -39,12 +43,13 @@ export class NonProdOrderService extends AbsOrderService {
     return result;
   }
 
-    override updateOrderR(order: Orderi):WritableSignal<Boolean| undefined> {
-    let result: WritableSignal<Boolean | undefined> = signal(false);    
-    
+    override updateOrder(order:Orderi):Observable<Boolean>{
+
+    let result = false;    
+    console.log('NonPROD -- Attempting to update order ' + order.orderId);
     this.orders().forEach(ord => {
       if (ord.orderId == order.orderId){
-        result.set(true);
+        result = true;
         ord.csrApprovalDate = order.csrApprovalDate;
         ord.customerName = order.customerName;
         ord.items = order.items;
@@ -52,16 +57,15 @@ export class NonProdOrderService extends AbsOrderService {
         ord.orderStatus = order.orderStatus;
       }
     });
-    if (result()){
+    if (result){
       let obsOrds =  of (this.orders());
       this.ordersSig$.set(obsOrds);
     }
     else{
       console.warn('OrderService(update) could not find order ' + order.orderId );
     }
-    return result; 
-    } //TODO implement this
-
+    return of(result); 
+  }
 
   override addNewOrder():Observable<Orderi>{
     let newOrderSig: WritableSignal<Orderi>= signal(getNewOrder());
