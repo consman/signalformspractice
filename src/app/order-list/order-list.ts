@@ -18,7 +18,6 @@ export class OrderList {
   orderTotalsMapSig: WritableSignal<Map<number,number>> = signal(this.orderTotalsMap); 
   
   constructor(){
-    //console.log('Order List constructor running.....')
 
     this.ordersSig = this.orderService.getAllOrders();
 
@@ -27,8 +26,7 @@ export class OrderList {
         this.addTotals(o);        
       });
     });
-
-    }
+  }
 
   addTotals(order:Orderi) :void{
     let tempTotal = 0;
@@ -37,7 +35,6 @@ export class OrderList {
     });
     if(order.orderId !=undefined){
       this.orderTotalsMapSig().set(order.orderId,tempTotal);
-      //console.log(' item total in OrderList constructor is: '+ tempTotal + ' for order = ' + order.orderId);
     }
   }
 
