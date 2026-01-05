@@ -1,4 +1,4 @@
-import { Injectable, WritableSignal } from '@angular/core';
+import { Injectable, Signal, WritableSignal } from '@angular/core';
 import { environment } from '../environments/environment';
 import { ChangeOrderResponse, Orderi } from './order/Orderi';
 
@@ -16,7 +16,7 @@ export abstract class AbsOrderService {
   abstract getOrderByOrderId(orderId:number): WritableSignal<Orderi | undefined>;
   abstract addNewOrder(): WritableSignal<Orderi | undefined>;
   abstract updateOrder (order:Orderi): WritableSignal<ChangeOrderResponse | undefined>;
-
+  abstract getUpdateInProgressSig(): Signal<boolean>;
 
 
 }

@@ -1,4 +1,4 @@
-import { Injectable, signal, WritableSignal } from '@angular/core';
+import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { ChangeOrderResponse, getNewOrder, Orderi } from './order/Orderi';
 import { ORDERS } from './mockData';
 import { AbsOrderService } from './abs-order-service';
@@ -67,6 +67,11 @@ export class NonProdOrderService extends AbsOrderService {
     this.orders().push(newOrderSig());
     //console.log('non prod / add new order');
     return newOrderSig;
+  }
+
+
+  override getUpdateInProgressSig(): Signal<boolean> {
+    return signal(false);
   }
 
 }

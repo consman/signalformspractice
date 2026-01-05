@@ -25,24 +25,20 @@ export class Order {
   ordSig: WritableSignal<Orderi| undefined> =signal(undefined);
   orderId: WritableSignal<number> = signal(0);
 
-  result: WritableSignal<string> = signal('Order not updated. Something went wrong. Please check the remote service.');
+  result: WritableSignal<string> = signal('');
   done: WritableSignal<boolean> = signal(false);
 
   orderModel = signal<Orderi>(initialOrder);
   orderForm = form(this.orderModel, orderSchema);
 
-  orderTotal: WritableSignal<number> = signal(0);
-  temp:Boolean | undefined = false;    
-  corSig: WritableSignal<ChangeOrderResponse | undefined> = signal(undefined);   
-  //newOrd: Orderi = initialOrder;
+  orderTotal: WritableSignal<number> = signal(0);   
+  corSig: WritableSignal<ChangeOrderResponse | undefined> = signal(undefined); 
 
   constructor(route: ActivatedRoute, _router: Router){
 
     this.orderId.set(0);
     let orderIdOrFunc = route.snapshot.paramMap.get('orderIdOrFunc');
-    let tempNewOrderId: number | undefined  = 0;
-    if(orderIdOrFunc == 'add'){
-      //this.newOrd = getNewOrder();
+    if(orderIdOrFunc == 'add'){      
       this.ordSig =this.orderService.addNewOrder(); 
     }
     else{ //here we are just retrieving an existing order
@@ -50,7 +46,6 @@ export class Order {
         let myInt = parseInt(orderIdOrFunc);
         if(myInt){
           this.orderId.set(myInt);
-          //console.log(' in order.ts and orderIdOrFunc = ' + orderIdOrFunc);
           this.ordSig = this.orderService.getOrderByOrderId(this.orderId());
           const ordFromServer = this.ordSig();
         }
@@ -64,27 +59,27 @@ export class Order {
     }
     
     effect(() => {
-        if(this.done() && this.corSig && this.corSig()?.result) {
-          //console.log('eff 1 .... this.corSig()?.result = ' + this.corSig()?.result )
-          this.result.set('Success!');
-        }
+      const prog = this.orderService.getUpdateInProgressSig();
+        if( this.done() && !prog()){
+          if( this.corSig && this.corSig()?.result ) {            
+            this.result.set('Success!');
+          }
+          else {
+            this.result.set('Order not updated. Something went wrong. Please check the remote service.');
+          }
+        }        
     });
 
-    effect(() =>{
-      //this.ordSig;   
+    effect(() =>{  
       const ordFromServer = this.ordSig();           
       if(ordFromServer) {
-        //console.log('eff 2 - OrderServer changed and ordFromServer.createDate = ' + ordFromServer.createDate);
         ordFromServer.csrApprovalDate = new Date(ordFromServer.csrApprovalDate);
         const orderSigOrderId = ordFromServer.orderId; // ordFromServer?.orderId;
         if (orderSigOrderId && orderSigOrderId > 0){
           this.orderId.set(orderSigOrderId);
           this.orderModel.set(ordFromServer);
           this.updateOrderTotal(ordFromServer);
-        }
-        else{
-          //console.log('eff 2 - OrderId is not > 0 but rather '+ orderSigOrderId);
-        }
+        }        
       }
     });
   }
@@ -93,7 +88,6 @@ export class Order {
     let temp = 0;
     if(o){
       o.items.forEach(i=>{
-        //this.orderTotal() ;
         temp = temp + (i.price * i.qty);
       });
       this.orderTotal.set(temp);
@@ -106,8 +100,7 @@ export class Order {
       submit(this.orderForm, async () => {
         const orderM = this.orderModel();
         this.corSig = this.orderService.updateOrder(orderM);
-        this.done.set(true);
-        //console.log(' efffect() should run here.');
+        this.done.set(true); 
       });
     }    
   }

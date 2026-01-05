@@ -1,4 +1,4 @@
-import { computed, Injectable, signal, WritableSignal } from '@angular/core';
+import { computed, effect, Injectable, Signal, signal, WritableSignal } from '@angular/core';
 import { AbsOrderService } from './abs-order-service';
 import { ChangeOrderResponse, getNewOrder, Orderi } from './order/Orderi';
 
@@ -14,12 +14,15 @@ export class ProdOrderService extends AbsOrderService {
 
   // prepare for updateOrder:
   private targetOrderForUpdateSig = signal<Orderi | null>(null);
+  private updateInProgressSig: Signal<boolean> = signal(true);
+
   updateOrderResource = httpResource<ChangeOrderResponse | undefined>(() => {     
     if(!this.targetOrderForUpdateSig()) return undefined; //do this so an unitended to to the server is not made when this class is instantiated.  
     const request: HttpResourceRequest = {
       url: this.server+':'+this.serverPort+'/changeOrder?',
       method: 'PUT',
-      body: this.targetOrderForUpdateSig() 
+      body: this.targetOrderForUpdateSig(),
+      reportProgress: true
     };
     return request;
   }); 
@@ -46,7 +49,9 @@ export class ProdOrderService extends AbsOrderService {
   }
  
   override updateOrder(order: Orderi):WritableSignal<ChangeOrderResponse | undefined> {
+    this.updateInProgressSig = signal(true);
     this.targetOrderForUpdateSig.set(order);
+    this.updateInProgressSig = this.updateOrderResource.isLoading;
     return this.updateOrderResource.value;
   }
 
@@ -60,5 +65,8 @@ export class ProdOrderService extends AbsOrderService {
     return result.value;
   }
 
+    override getUpdateInProgressSig(): Signal<boolean> {
+    return this.updateInProgressSig;
+  }
  
 }
