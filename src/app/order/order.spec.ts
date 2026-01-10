@@ -10,7 +10,7 @@ export const DELAY_TIME_BECAUSE_OF_USING_SIGNALS = 221;//TODO fix this when they
 import { Order } from './order';
 import { NonProdOrderService } from '../non-prod-order-service';
 import { AbsOrderService } from '../abs-order-service';
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 
 describe('Order', () => {
   let component: Order;
@@ -21,7 +21,7 @@ describe('Order', () => {
     
     await TestBed.configureTestingModule({
       imports: [Order],
-      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},
+      providers:[provideZonelessChangeDetection(),{provide: ActivatedRoute, useValue: FAKE_ROUTE},
       {provide:AbsOrderService, useValue:nonProdOrderService}]  
     })
     .compileComponents();
