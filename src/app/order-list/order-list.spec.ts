@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { routes } from '../app.routes';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { OrderList } from './order-list';
@@ -25,11 +26,10 @@ describe('OrderList', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [OrderList],
-      providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},
+       providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},
         provideRouter(routes),
         {provide:AbsOrderService, useValue:nonProdOrderService}]
-    })
-    .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(OrderList);
     component = fixture.componentInstance;
@@ -40,7 +40,7 @@ describe('OrderList', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should Add the total', () => {
+    it('should Add the total', () => {
     component.addTotals(FAKEORDER);
     expect(component.orderTotalsMapSig().get(400)).toEqual(73);
   });

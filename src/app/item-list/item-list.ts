@@ -1,15 +1,15 @@
 import { Component, computed, EventEmitter, input, Output } from '@angular/core';
-import { Field, FieldTree } from '@angular/forms/signals';
+import { FormField, FieldTree } from '@angular/forms/signals';
 import { CurrencyPipe} from '@angular/common';
 import { Item } from './itemList';
+
 @Component({
+  imports: [FormField,CurrencyPipe],
   selector: 'app-item-list',
-  imports: [Field,CurrencyPipe],
-  templateUrl: './item-list.html',
   styleUrl: '../app.css',
+  templateUrl: './item-list.html',
 })
 export class ItemList {
-
   items = input.required<FieldTree<Item[]>>();
   resultTot = computed<number> ( () => this.getTotal());
   unitTestInProgress: boolean = false;
@@ -43,4 +43,3 @@ export class ItemList {
     this.deletionCompletion = true;
   }
 }
-

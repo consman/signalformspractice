@@ -1,13 +1,12 @@
-import { Injectable, Signal, signal, WritableSignal } from '@angular/core';
+
+import { Injectable, Signal, signal, WritableSignal, Service } from '@angular/core';
 import { ChangeOrderResponse, getNewOrder, Orderi } from './order/Orderi';
 import { ORDERS } from './mockData';
 import { AbsOrderService } from './abs-order-service';
 import { environment } from '../environments/environment';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class NonProdOrderService extends AbsOrderService {
+@Service()
+export class NonProdOrderService extends AbsOrderService{
 
   orders: WritableSignal<Orderi[]>= signal([]);
   nextOrderId=0;
@@ -75,4 +74,3 @@ export class NonProdOrderService extends AbsOrderService {
   }
 
 }
-

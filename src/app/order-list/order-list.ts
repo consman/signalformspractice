@@ -5,10 +5,10 @@ import { DatePipe, CurrencyPipe} from '@angular/common';
 import { AbsOrderService } from '../abs-order-service';
 
 @Component({
-  selector: 'app-order-list',
   imports: [DatePipe,CurrencyPipe,RouterLink],
-  templateUrl: './order-list.html',
+  selector: 'app-order-list',
   styleUrl: '../app.css',
+  templateUrl: './order-list.html',
 })
 export class OrderList {
 
@@ -36,6 +36,5 @@ export class OrderList {
     if(order.orderId !=undefined){
       this.orderTotalsMapSig().set(order.orderId,tempTotal);
     }
-  }
-
+  }  
 }

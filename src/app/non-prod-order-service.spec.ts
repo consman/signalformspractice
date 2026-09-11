@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-
 import { NonProdOrderService } from './non-prod-order-service';
 
-describe('OrderService', () => {
+describe('NonProdOrderService', () => {
   let service: NonProdOrderService;
 
   beforeEach(() => {

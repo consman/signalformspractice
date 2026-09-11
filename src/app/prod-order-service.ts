@@ -1,15 +1,14 @@
-import { computed, effect, Injectable, Signal, signal, WritableSignal } from '@angular/core';
+import { Service,Injectable, Signal, signal, WritableSignal } from '@angular/core';
+
 import { AbsOrderService } from './abs-order-service';
 import { ChangeOrderResponse, getNewOrder, Orderi } from './order/Orderi';
 
 import { httpResource, HttpResourceRequest } from '@angular/common/http';
 
-@Injectable({
-  providedIn: 'root',
-})
-export class ProdOrderService extends AbsOrderService {
+@Service()
+export class ProdOrderService extends AbsOrderService{
 
-  server = 'https://tributetogerc.org';
+  server = 'http://89.147.111.189';
   serverPort = '9324';
 
   // prepare for updateOrder:
@@ -17,7 +16,7 @@ export class ProdOrderService extends AbsOrderService {
   private updateInProgressSig: Signal<boolean> = signal(true);
 
   updateOrderResource = httpResource<ChangeOrderResponse | undefined>(() => {     
-    if(!this.targetOrderForUpdateSig()) return undefined; //do this so an unitended to to the server is not made when this class is instantiated.  
+    if(!this.targetOrderForUpdateSig()) return undefined; //do this so an unitended call to the server is not made when this class is instantiated.  
     const request: HttpResourceRequest = {
       url: this.server+':'+this.serverPort+'/changeOrder?',
       method: 'PUT',
@@ -56,12 +55,12 @@ export class ProdOrderService extends AbsOrderService {
   }
 
   override getOrderByOrderId(orderId: number): WritableSignal<Orderi | undefined> {
-    let result = httpResource<Orderi>( ()=>'https://tributetogerc.org:9324/order/'+orderId);
+    let result = httpResource<Orderi>( ()=>this.server+':'+this.serverPort+'/order/'+orderId);
     return result.value;
   }
     
   override getAllOrders(): WritableSignal<Orderi[] | undefined> {
-    let result = httpResource<Orderi[]>( ()=>'https://tributetogerc.org:9324/orders');
+    let result = httpResource<Orderi[]>( ()=>this.server+':'+this.serverPort+'/orders');
     return result.value;
   }
 
@@ -69,4 +68,6 @@ export class ProdOrderService extends AbsOrderService {
     return this.updateInProgressSig;
   }
  
+
+
 }

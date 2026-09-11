@@ -12,7 +12,8 @@ describe('App', () => {
     await TestBed.configureTestingModule({
       imports: [App],
       providers:[{provide: ActivatedRoute, useValue: FAKE_ROUTE},provideRouter(routes)]
-    }).compileComponents();
+    })
+      .compileComponents();
   });
 
   it('should create the app', () => {
@@ -20,4 +21,6 @@ describe('App', () => {
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
+
+  
 });

@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { Order } from './order';
+import { NonProdOrderService } from '../non-prod-order-service';
+import { AbsOrderService } from '../abs-order-service';
+import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 
 export const FAKE_ROUTE = {
   snapshot: { paramMap: {get: () => '502'}}
@@ -7,10 +11,6 @@ export const FAKE_ROUTE = {
 
 export const DELAY_TIME_BECAUSE_OF_USING_SIGNALS = 221;//TODO fix this when they come up with a statement to mitigate fast Unit tests of slow Signals.
 
-import { Order } from './order';
-import { NonProdOrderService } from '../non-prod-order-service';
-import { AbsOrderService } from '../abs-order-service';
-import { ApplicationRef, provideZonelessChangeDetection } from '@angular/core';
 
 describe('Order', () => {
   let component: Order;
@@ -18,13 +18,11 @@ describe('Order', () => {
   let nonProdOrderService = new NonProdOrderService();
 
   beforeEach(async () => {
-    
     await TestBed.configureTestingModule({
       imports: [Order],
       providers:[provideZonelessChangeDetection(),{provide: ActivatedRoute, useValue: FAKE_ROUTE},
       {provide:AbsOrderService, useValue:nonProdOrderService}]  
-    })
-    .compileComponents();
+    }).compileComponents();
     const appRef = TestBed.inject(ApplicationRef);
 
     fixture = TestBed.createComponent(Order);
@@ -34,6 +32,10 @@ describe('Order', () => {
   });
 
   it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+    it('should create', () => {
     expect(component.orderId()).toEqual(502);
   });
 
@@ -77,4 +79,5 @@ describe('Order', () => {
       expect(component.orderModel().items.length).toEqual(3);
     },DELAY_TIME_BECAUSE_OF_USING_SIGNALS);    
   });
+
 });

@@ -1,6 +1,5 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners,provideZonelessChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-
 import { routes } from './app.routes';
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { AbsOrderService } from './abs-order-service';
@@ -9,7 +8,7 @@ import { orderServiceFactory } from './orderServiceFactory';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideBrowserGlobalErrorListeners(),provideZonelessChangeDetection(),
+    provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideHttpClient(), 
     {provide: 'http', useValue: HttpClient}, 

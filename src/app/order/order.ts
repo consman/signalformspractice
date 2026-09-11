@@ -2,21 +2,19 @@ import { Component, inject, signal, WritableSignal, effect } from '@angular/core
 import { ChangeOrderResponse, Orderi , getNewOrder, initialOrder, orderSchema} from './Orderi';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { Field, form, submit } from '@angular/forms/signals';
+import { FormField, form, submit } from '@angular/forms/signals';
 import { DatePipe} from '@angular/common'; //, JsonPipe
 import { ItemList } from '../item-list/item-list';
 import { Item } from '../item-list/itemList';
 import { AbsOrderService } from '../abs-order-service';
 
 @Component({
+  imports: [RouterLink, FormField, DatePipe, ItemList],
   selector: 'app-order',
-  imports: [RouterLink, Field, DatePipe, ItemList], //, JsonPipe
-  templateUrl: './order.html',
   styleUrl: '../app.css',
+  templateUrl: './order.html',
 })
-
 export class Order {
-
   orderService = inject(AbsOrderService);
   now = new Date();
   today = getBasicDateString(this.now);
@@ -161,4 +159,5 @@ export function getNewItem(newId:number): Item  {
   return{
     itemId:newId, description:'New Item', qty:1, price:1
   }
-};
+
+}

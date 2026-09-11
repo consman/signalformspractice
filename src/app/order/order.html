@@ -6,7 +6,7 @@
         <div class="form-group">
             <label>
                 Customer
-                <input data-test="customerNameInput" type="text" [field]="orderForm.customerName" class="form-control" placeholder="Enter customer Name here"
+                <input data-test="customerNameInput" type="text" [formField]="orderForm.customerName" class="form-control" placeholder="Enter customer Name here"
                  />
             </label>
             @if(orderForm.customerName().invalid() && orderForm.customerName().touched()){
@@ -29,7 +29,7 @@
         <div class="form-group">
             <label>
                 CSR Approval Date
-                <input data-test="approvalDate" type="date" [field]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
+                <input data-test="approvalDate" type="date" [formField]="orderForm.csrApprovalDate" class="form-control" placeholder=""/>
             </label>
             
             @let approvedWithFutureDate = ( (orderModel().csrApprovalDate.getTime() - startOfToday.getTime() > 0) && orderModel().orderStatus=='Approved') ;
@@ -44,7 +44,7 @@
         <div class="form-group">
             <label>
                 Status
-                <select data-test="status" [field]="orderForm.orderStatus" >
+                <select data-test="status" [formField]="orderForm.orderStatus" >
                     <option>New</option>
                     <option>In Progress</option>
                     <option>Approved</option>
